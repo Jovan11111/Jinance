@@ -1,4 +1,3 @@
-import pprint
 import yfinance as yf
 from datetime import date, datetime, timedelta
 
@@ -24,12 +23,12 @@ class EarningsManager(metaclass=SingletonMeta):
 
             try:
                 stock = yf.Ticker(ticker)
-                calendar = stock.calendar
-                
-                if calendar is None or len(calendar) == 0:
+
+                calendar = stock.calendar or {}
+                if not calendar:
                     continue
 
-                earnings_date = calendar.get("Earnings Date", [None])[0]
+                earnings_date = calendar.get("Earnings Date", None)[0]
                 if earnings_date is None or not (today <= earnings_date <= cutoff):
                     continue
 
@@ -98,3 +97,4 @@ class EarningsManager(metaclass=SingletonMeta):
                 continue
 
         return result
+    
