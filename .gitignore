@@ -4,3 +4,6 @@
 */__pycache__/
 *.pdf
 *.png
+.env
+*.env
+api/.env
