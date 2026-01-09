@@ -1,10 +1,12 @@
-from datetime import date
 import os
+from datetime import date
+
+import markdown as md_pkg
+from weasyprint import HTML
 
 from report_building.graph_builder import GraphBuilder
 from utils.singleton_meta import SingletonMeta
-import markdown as md_pkg
-from weasyprint import HTML
+
 
 class ReportBuilder(metaclass=SingletonMeta):
     def __init__(self):
@@ -17,7 +19,9 @@ class ReportBuilder(metaclass=SingletonMeta):
         md = []
         md.append(f"# Izveštaj za {today}")
         md.append("## Earnings izveštaj\n")
-        md.append("Ovo je automatski generisan izveštaj o nadolazećim javnim objavama prihoda, u kom su prikazani osnovni podaci o narednih 5 firmi koje ce javno objaviti prihode. Podaci su dohvaceni sa yahoo finance besplatne pristupne tacke.\n")
+        md.append(
+            "Ovo je automatski generisan izveštaj o nadolazećim javnim objavama prihoda, u kom su prikazani osnovni podaci o narednih 5 firmi koje ce javno objaviti prihode. Podaci su dohvaceni sa yahoo finance besplatne pristupne tacke.\n"
+        )
         for idx, (ticker, info) in enumerate(data.items()):
             name = info.get("name", "")
             earnings_date = info.get("date", "")
@@ -44,9 +48,15 @@ class ReportBuilder(metaclass=SingletonMeta):
             md.append("\n**Prethodni EPS**\n")
             md.append("| | najskoriji | -> | -> | najstariji |")
             md.append("|---|---|---|---|---|")
-            md.append(f"| **Ocekivani** | {expected_vals[0]} | {expected_vals[1]} | {expected_vals[2]} | {expected_vals[3]} |")
-            md.append(f"| **Stvarni** | {actual_vals[0]} | {actual_vals[1]} | {actual_vals[2]} | {actual_vals[3]} |")
-            md.append(f"| **Promena cene (%)** | {price_changes[0]} | {price_changes[1]} | {price_changes[2]} | {price_changes[3]} |")
+            md.append(
+                f"| **Ocekivani** | {expected_vals[0]} | {expected_vals[1]} | {expected_vals[2]} | {expected_vals[3]} |"
+            )
+            md.append(
+                f"| **Stvarni** | {actual_vals[0]} | {actual_vals[1]} | {actual_vals[2]} | {actual_vals[3]} |"
+            )
+            md.append(
+                f"| **Promena cene (%)** | {price_changes[0]} | {price_changes[1]} | {price_changes[2]} | {price_changes[3]} |"
+            )
             md.append("\n")
             md.append(f"- **Vrednost firme:** ${market_cap:,}")
             md.append(f"- **Prihod firme:** ${revenue:,}")
@@ -66,7 +76,7 @@ class ReportBuilder(metaclass=SingletonMeta):
 
         today_str = date.today().strftime("%Y%m%d")
 
-        html_body = md_pkg.markdown(md_content, extensions=["extra", "nl2br"]) 
+        html_body = md_pkg.markdown(md_content, extensions=["extra", "nl2br"])
 
         html = (
             "<!doctype html><html><head><meta charset='utf-8'>"

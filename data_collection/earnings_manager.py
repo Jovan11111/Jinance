@@ -1,13 +1,15 @@
-import yfinance as yf
 from datetime import date, datetime, timedelta
+
+import yfinance as yf
 
 import utils.constants as constants
 from utils.singleton_meta import SingletonMeta
 
+
 class EarningsManager(metaclass=SingletonMeta):
     """Fetch upcoming earnings."""
 
-    def __init__(self, days_ahead=30, tickers = constants.TICKERS_SP_100):
+    def __init__(self, days_ahead=30, tickers=constants.TICKERS_SP_100):
         print("EarningsManager initialized")
         self.days_ahead = days_ahead
         self.tickers = tickers
@@ -69,18 +71,25 @@ class EarningsManager(metaclass=SingletonMeta):
                         earnings_date = edate.date()
                         if earnings_date > date.today():
                             continue
-                        hist = stock.history(start=earnings_date - timedelta(days=5), end=earnings_date + timedelta(days=6)) 
+                        hist = stock.history(
+                            start=earnings_date - timedelta(days=5),
+                            end=earnings_date + timedelta(days=6),
+                        )
                         if not hist.empty:
                             price_before = hist.iloc[0]["Close"]
                             price_after = hist.iloc[-1]["Close"]
-                            price_diff = (price_after - price_before) / price_before * 100
+                            price_diff = (
+                                (price_after - price_before) / price_before * 100
+                            )
                         else:
                             price_diff = 0
-                        prev_earnings.append({
-                            "expected_eps": float(row.get("EPS Estimate", 0.0)),
-                            "actual_eps": float(row.get("Reported EPS", 0.0)),
-                            "price_diff": float(price_diff)
-                        })
+                        prev_earnings.append(
+                            {
+                                "expected_eps": float(row.get("EPS Estimate", 0.0)),
+                                "actual_eps": float(row.get("Reported EPS", 0.0)),
+                                "price_diff": float(price_diff),
+                            }
+                        )
 
                 result[ticker] = {
                     "name": company_name,
@@ -89,7 +98,7 @@ class EarningsManager(metaclass=SingletonMeta):
                     "eps": eps,
                     "date": earnings_date,
                     "revenue": revenue,
-                    "previous_earnings": prev_earnings
+                    "previous_earnings": prev_earnings,
                 }
 
             except Exception as e:
@@ -97,4 +106,3 @@ class EarningsManager(metaclass=SingletonMeta):
                 continue
 
         return result
-    

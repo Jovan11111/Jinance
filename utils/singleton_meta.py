@@ -30,4 +30,3 @@ class SingletonMeta(type):
     def clear(cls):
         """Reset the stored instance so a new one will be created on next call."""
         cls._instance = None
-

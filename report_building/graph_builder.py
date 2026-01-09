@@ -1,9 +1,11 @@
 import os
-import matplotlib.pyplot as plt
-from datetime import datetime
 import shutil
+from datetime import datetime
+
+import matplotlib.pyplot as plt
 
 from utils.singleton_meta import SingletonMeta
+
 
 class GraphBuilder(metaclass=SingletonMeta):
     def __init__(self, output_dir="graphs"):
@@ -49,8 +51,7 @@ class GraphBuilder(metaclass=SingletonMeta):
         plt.grid(True)
 
         path = os.path.join(
-            self.output_dir,
-            f"{ticker}_{datetime.now():%Y%m%d_%H%M%S}.png"
+            self.output_dir, f"{ticker}_{datetime.now():%Y%m%d_%H%M%S}.png"
         )
 
         plt.tight_layout()

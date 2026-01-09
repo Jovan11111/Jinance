@@ -1,1 +1,106 @@
-# TBD
+import json
+import os
+from typing import Any, Dict, List
+
+import requests
+from dotenv import load_dotenv
+
+from utils.singleton_meta import SingletonMeta
+
+load_dotenv()
+
+
+class AiService(metaclass=SingletonMeta):
+    GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+    MODEL = "llama-3.1-8b-instant"
+
+    def __init__(self):
+        self.api_key = os.getenv("GROQ_API_KEY")
+        if not self.api_key:
+            raise RuntimeError("GROQ_API_KEY not found in environment")
+
+    def filter_news(
+        self, news_by_ticker: Dict[str, List[Dict[str, Any]]], top_k: int = 10
+    ) -> List[Dict[str, Any]]:
+        articles = self._flatten(news_by_ticker)
+
+        if not articles:
+            return []
+
+        prompt = self._build_prompt(articles, top_k)
+        response = self._call_groq(prompt)
+
+        return self._parse_response(response)
+
+    def _flatten(self, news_by_ticker):
+        flattened = []
+
+        for articles in news_by_ticker.values():
+            for article in articles:
+                flattened.append(
+                    {
+                        "pubTime": article.get("pubTime"),
+                        "title": article.get("title"),
+                        "summary": article.get("summary"),
+                        "link": article.get("link"),
+                    }
+                )
+
+        return flattened
+
+    def _build_prompt(self, articles: List[Dict[str, Any]], top_k: int) -> str:
+        return f"""
+You are a financial markets AI.
+
+You will receive a list of recent financial news articles.
+Each article has:
+- pubTime
+- title
+- summary
+- link
+
+Your task:
+Select the {top_k} articles that are MOST LIKELY to significantly impact stock prices in the upcoming days/weeks.
+
+Return ONLY a JSON array of article objects.
+Each object MUST contain exactly:
+pubTime, title, summary, link
+
+DO NOT add explanations.
+DO NOT add extra fields.
+DO NOT return text outside JSON.
+
+Articles:
+{json.dumps(articles, indent=2, default=str)}
+""".strip()
+
+    def _call_groq(self, prompt: str) -> str:
+        payload = {
+            "model": self.MODEL,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+        }
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+        response = requests.post(
+            self.GROQ_API_URL,
+            json=payload,
+            headers=headers,
+            timeout=30,
+        )
+        response.raise_for_status()
+
+        return response.json()["choices"][0]["message"]["content"]
+
+    def _parse_response(self, response: str) -> List[Dict[str, Any]]:
+        try:
+            data = json.loads(response)
+            if not isinstance(data, list):
+                raise ValueError("AI response is not a list")
+            return data
+        except Exception as e:
+            raise RuntimeError(f"Invalid AI response: {response}") from e

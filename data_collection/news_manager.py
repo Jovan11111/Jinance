@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta, timezone
+
 import yfinance as yf
+
+from api.ai_service import AiService
 from utils import constants
 from utils.singleton_meta import SingletonMeta
 
@@ -11,6 +14,7 @@ class NewsManager(metaclass=SingletonMeta):
         print("NewsManager initialized")
         self.days_behind = days_behind
         self.tickers = tickers
+        self.ai_service = AiService.get_instance()
 
     def _news_limit(self) -> int:
         if self.days_behind == 1:
@@ -58,26 +62,26 @@ class NewsManager(metaclass=SingletonMeta):
                 if ticker.lower() not in title_l and company_name not in title_l:
                     continue
 
-                pub_time = datetime.fromisoformat(
-                    pub_date.replace("Z", "+00:00")
-                )
+                pub_time = datetime.fromisoformat(pub_date.replace("Z", "+00:00"))
 
                 if pub_time < cutoff:
                     continue
 
-
-                if not any(keyword in title_l for keyword in constants.HARD_EVENT_KEYWORDS):
+                if not any(
+                    keyword in title_l for keyword in constants.HARD_EVENT_KEYWORDS
+                ):
                     continue
 
-                ticker_news.append({
-                    "pubTime": pub_time,
-                    "title": title,
-                    "summary": summary,
-                    "link": link
-                })
+                ticker_news.append(
+                    {
+                        "pubTime": pub_time,
+                        "title": title,
+                        "summary": summary,
+                        "link": link,
+                    }
+                )
 
                 seen_urls.add(link)
-
 
             if ticker_news:
                 result[ticker] = ticker_news
@@ -85,6 +89,8 @@ class NewsManager(metaclass=SingletonMeta):
         print(len(seen_urls))
         print("\n===== FINAL NEWS OUTPUT =====")
         from pprint import pprint
-        pprint(result)
+
+        small_res = self.ai_service.filter_news(result, top_k=10)
+        pprint(small_res)
 
         return result
