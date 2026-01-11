@@ -1,4 +1,4 @@
-from data_collection.earnings_manager import EarningsManager
+from managers.earnings_manager import EarningsManager
 from report_building.report_builder import ReportBuilder
 from utils.singleton_meta import SingletonMeta
 

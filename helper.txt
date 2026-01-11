@@ -1,0 +1,37 @@
+E ovako, ajde sada da sredimo arhitekturu. Zelim da mi kazes kako ima najvise smisla da sredim arhitekturu, tako da se uklapa sa buducim planovima, i da sada ima smisla. Zelim da postujem objektno orijentisano programiranje i projketne uzorke da postavim tamo gde ima smisla.
+Prvo klase koje imam:
+api folder:
+AiService(metaclass=SingletonMeta)
+data_colelction folder:
+EarningsManager(metaclass=SingletonMeta)
+InsiderManager(metaclass=SingletonMeta)
+NewsManager(metaclass=SingletonMeta)
+report_building folder:
+GraphBuilder(metaclass=SingletonMeta)
+ReportBuilder(metaclass=SingletonMeta)
+utils folder
+SingletonMeta 
+root folder:
+Jinance
+
+Sad objasnjavam redom
+AiService ima javnu metodu filder_news, to si sad napisao skoro
+EarningsManager imas metodu get_latest_upcoming_earnings koja prima broj kompanija, koliko sledecih earningsa se da prikaze, vraca dict-> str(Ticker) : dict -> name: ime, eps: eps, itd.
+NewsManager ima metodu get_latest_news koja nema nikakve argumente, vraca listu dictova, svaki dict ima pubDate, title, summary znas vec
+InsiderManager jos uvek nsita ne vraca samo postji kao klasa, i ima metodu get_insider_trading_data koja nije implementirana jos uvek
+GraphBuilder ima build_price_graph koja prima: prices: list[float], ticker: str a vraca string, path do grafika koji je napravljen
+ReportBuilder ima metode build_markdown i create_pdf_report,obe primaju dict data, a trenutno ubild_markdown pretpostavlja da je data samo earnings stvari, i onda gradi amrkdown za taj deo, nisam smiio kako da ddam dalje
+Jinance je kao fasa, poziva sve ostale, za sad ima instancu earnings_manager i report_builder
+ReportBuidler ima klasu GraphBuilder koju poziva za kreiranje grafova
+NewsManager ima AiService i poziva filtriiranje vesti
+
+To je to od stvari koje imma. Testove nemam nigde
+Buduci planovi za implementaicju:
+Jos managera za podatke, trebace mi manager za insider trading implementiran, manager za pracenje koja firma vec dugo pada, manager za jos neke stvari
+PLaniram da dodam gui, preko kog ce biti moguce odraditi konfiguraciju (sve ove stvari koje maangeri primaju + kolikoc esto da se generise report sam, + koji delovi reporta + mozda neko pracenje kad zapises koje si akcije kupio/ulozio al svkakao gui cu imati)
+
+Ono sto zelim od tebe:
+Analiziraj sta imam. Analiziraj sta hocu. Analiziraj i zakljuci sta mi jos treba a da nisam pomenuo da bi bilo dobro
+Zakljuci kako bi trebala da mi izgleda arhitetkrua. Da li mi treba da izvoid neke kalse iz nekih drugih, da li treba da koristim buidler DP za report buildere, da li ima sisila jos ensto koristis
+Nemoj previse da komplikujes, ne zelim da imam bespotrebne klase koje realno ne bi trebale da budu tu, zelim da bude dobro smisljeno, jednostavno za prosirivanje itd.
+To je sto se tice arhitekture, i ajde prvo to pa cu onda videti za testove

@@ -1,5 +1,5 @@
-from data_collection.news_manager import NewsManager
 from jinance import Jinance
+from managers.news_manager import NewsManager
 
 
 def main():
