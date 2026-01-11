@@ -4,10 +4,9 @@ import yfinance as yf
 
 from api.ai_service import AiService
 from utils import constants
-from utils.singleton_meta import SingletonMeta
 
 
-class NewsManager(metaclass=SingletonMeta):
+class NewsManager:
     """Fetch latest relevant news for given tickers."""
 
     def __init__(self, days_behind=1, tickers=constants.TICKERS_SP_100):

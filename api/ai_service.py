@@ -1,10 +1,10 @@
 import json
 import os
-from typing import Any, Dict, List
 
 import requests
 from dotenv import load_dotenv
 
+from models.news_article import NewsArticle
 from utils.singleton_meta import SingletonMeta
 
 load_dotenv()
@@ -20,35 +20,14 @@ class AiService(metaclass=SingletonMeta):
             raise RuntimeError("GROQ_API_KEY not found in environment")
 
     def filter_news(
-        self, news_by_ticker: Dict[str, List[Dict[str, Any]]], top_k: int = 10
-    ) -> List[Dict[str, Any]]:
-        articles = self._flatten(news_by_ticker)
-
-        if not articles:
-            return []
-
-        prompt = self._build_prompt(articles, top_k)
+        self, news: list[NewsArticle], top_k: int = 10
+    ) -> list[NewsArticle]:
+        prompt = self._build_prompt(news, top_k)
         response = self._call_groq(prompt)
 
         return self._parse_response(response)
 
-    def _flatten(self, news_by_ticker):
-        flattened = []
-
-        for articles in news_by_ticker.values():
-            for article in articles:
-                flattened.append(
-                    {
-                        "pubTime": article.get("pubTime"),
-                        "title": article.get("title"),
-                        "summary": article.get("summary"),
-                        "link": article.get("link"),
-                    }
-                )
-
-        return flattened
-
-    def _build_prompt(self, articles: List[Dict[str, Any]], top_k: int) -> str:
+    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
         return f"""
 You are a financial markets AI.
 
@@ -71,7 +50,7 @@ DO NOT add extra fields.
 DO NOT return text outside JSON.
 
 Articles:
-{json.dumps(articles, indent=2, default=str)}
+{json.dumps(news, indent=2, default=str)}
 """.strip()
 
     def _call_groq(self, prompt: str) -> str:
@@ -96,7 +75,7 @@ Articles:
 
         return response.json()["choices"][0]["message"]["content"]
 
-    def _parse_response(self, response: str) -> List[Dict[str, Any]]:
+    def _parse_response(self, response: str) -> list[NewsArticle]:
         try:
             data = json.loads(response)
             if not isinstance(data, list):

@@ -8,6 +8,6 @@ def main():
 
 
 if __name__ == "__main__":
-    news_manager = NewsManager.get_instance()
+    news_manager = NewsManager()
     news_manager.get_latest_news()
     # main()
