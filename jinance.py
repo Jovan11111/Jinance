@@ -1,12 +1,10 @@
-from managers.earnings_manager import EarningsManager
-from report_building.report_builder import ReportBuilder
+from report_building.report_builder_director import ReportBuilder
 from utils.singleton_meta import SingletonMeta
 
 
 class Jinance(metaclass=SingletonMeta):
     def __init__(self):
         print("Jinance initialized")
-        self.earnings_manager: EarningsManager = EarningsManager.get_instance()
         self.report_builder: ReportBuilder = ReportBuilder.get_instance()
 
     def generate_report(self, number_of_companies: int = 5) -> str:

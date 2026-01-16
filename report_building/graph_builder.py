@@ -4,10 +4,8 @@ from datetime import datetime
 
 import matplotlib.pyplot as plt
 
-from utils.singleton_meta import SingletonMeta
 
-
-class GraphBuilder(metaclass=SingletonMeta):
+class GraphBuilder:
     def __init__(self, output_dir="graphs"):
         print("GraphBuilder initialized")
         self.output_dir = output_dir

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from models.eps_information import EpsInformation
 from models.previous_earnings_information import PreviousEarningsInformation
