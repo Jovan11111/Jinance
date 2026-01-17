@@ -3,11 +3,11 @@ import datetime
 
 class NewsArticle:
     def __init__(
-        self, title: str, summary: str, pubDate: datetime, url: str, ticker: str
+        self, title: str, summary: str, pub_time: datetime, url: str, ticker: str
     ):
         self._title: str = title
         self._summary: str = summary
-        self._pubDate: datetime = pubDate
+        self._pub_time: datetime = pub_time
         self._url: str = url
         self._ticker: str = ticker
 
@@ -20,8 +20,8 @@ class NewsArticle:
         return self._summary
 
     @property
-    def pubDate(self) -> datetime:
-        return self._pubDate
+    def pub_time(self) -> datetime:
+        return self._pub_time
 
     @property
     def url(self) -> str:
@@ -35,7 +35,7 @@ class NewsArticle:
         return {
             "title": self._title,
             "summary": self._summary,
-            "pubDate": self._pubDate.isoformat(),
+            "pub_time": self._pub_time.isoformat(),
             "url": self._url,
             "ticker": self._ticker,
         }

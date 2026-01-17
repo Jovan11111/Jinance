@@ -36,12 +36,12 @@ class YahooEarningsProvider(EarningsProvider):
                 result.append(
                     EarningsInformation(
                         ticker=ticker,
-                        company_name=company_name,
-                        earnings_date=earnings_date,
+                        name=company_name,
+                        date=earnings_date,
                         market_cap=market_cap,
                         eps=eps,
                         revenue=revenue,
-                        price_last_15_days=price_last_15_days,
+                        value_last_15_days=price_last_15_days,
                         previous_earnings=prev_earnings,
                     )
                 )
@@ -96,9 +96,7 @@ class YahooEarningsProvider(EarningsProvider):
             eps_high = calendar.get("Earnings High", None)
 
             if eps_avg is not None and eps_low is not None and eps_high is not None:
-                eps_info = EpsInformation(
-                    average=round(eps_avg, 2), low=eps_low, high=eps_high
-                )
+                eps_info = EpsInformation(round(eps_avg, 2), eps_low, eps_high)
                 return eps_info
             return None
         except Exception as e:

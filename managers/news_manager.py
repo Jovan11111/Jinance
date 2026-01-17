@@ -1,6 +1,6 @@
 from filters.news_filter import NewsFilter
 from models.news_article import NewsArticle
-from providers.news_provider import NewsProvider
+from providers.yahoo_news_provider import YahooNewsProvider
 from utils import constants
 
 
@@ -9,16 +9,16 @@ class NewsManager:
 
     def __init__(
         self,
-        provider: NewsProvider,
-        filter: NewsFilter,
+        provider: str,
         days_behind=1,
         tickers=constants.TICKERS_SP_100,
     ):
         print("NewsManager initialized")
         self.days_behind = days_behind
         self.tickers = tickers
-        self.provider = provider
-        self.filter = filter
+        if provider == "yahoo":
+            self.provider = YahooNewsProvider()
+        self.filter = NewsFilter()
 
     def get_latest_news(self) -> list[NewsArticle]:
         all_news = self.provider.fetch_news(self.tickers, self.days_behind)

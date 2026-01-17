@@ -4,21 +4,24 @@ from report_building.report_builder import ReportBuilder
 
 
 class EarningsBuilder(ReportBuilder):
-    def __init__(self, earnings_data: list[EarningsInformation]):
+    def __init__(self):
         self._graph_builder = GraphBuilder()
-        self._earnings_data = earnings_data
 
     @property
-    def earnings_data(self) -> list[EarningsInformation]:
-        return self._earnings_data
+    def graph_builder(self) -> GraphBuilder:
+        return self._graph_builder
 
-    def build_markdown(self) -> str:
+    def build_markdown(self, earnings_data: list[EarningsInformation]) -> str:
         md = []
         md.append("## Earnings izveštaj\n")
         md.append(
             "Ovo je automatski generisan izveštaj o nadolazećim javnim objavama prihoda, u kom su prikazani osnovni podaci o narednih 5 firmi koje ce javno objaviti prihode. Podaci su dohvaceni sa yahoo finance besplatne pristupne tacke.\n"
         )
-        for earning in self.earnings_data:
+        for earning in earnings_data:
+            graph_path = self.graph_builder.build_price_graph(
+                earning.value_last_15_days, earning.ticker
+            )
+
             md.append(f"### {earning.name} - {earning.ticker}")
             md.append(f"- **Datum earnings-a:** {earning.date.strftime('%d.%m.%Y')}")
             md.append(f"- **Prosečna EPS:** {earning.eps.avg}")
@@ -28,28 +31,30 @@ class EarningsBuilder(ReportBuilder):
             md.append("\n**Prethodni EPS**\n")
             md.append("| | najskoriji | -> | -> | najstariji |")
             md.append("|---|---|---|---|---|")
-            """
-            md.append(
-                f"| **Ocekivani** | {expected_vals[0]} | {expected_vals[1]} | {expected_vals[2]} | {expected_vals[3]} |"
-            )
-            md.append(
-                f"| **Stvarni** | {actual_vals[0]} | {actual_vals[1]} | {actual_vals[2]} | {actual_vals[3]} |"
-            )
-            md.append(
-                f"| **Promena cene (%)** | {price_changes[0]} | {price_changes[1]} | {price_changes[2]} | {price_changes[3]} |"
-            )
+            helper_row = "| **Ocekivani** |"
+            for prev in earning.previous_earnings:
+                helper_row += f" {prev.expected_eps} |"
+            md.append(helper_row)
+
+            helper_row = "| **Stvarni** |"
+            for prev in earning.previous_earnings:
+                helper_row += f" {prev.actual_eps} |"
+            md.append(helper_row)
+
+            helper_row = "| **Promena cene (%)** |"
+            for prev in earning.previous_earnings:
+                helper_row += f" {prev.price_diff} |"
+            md.append(helper_row)
+
             md.append("\n")
-            md.append(f"- **Vrednost firme:** ${market_cap:,}")
-            md.append(f"- **Prihod firme:** ${revenue:,}")
+            md.append(f"- **Vrednost firme:** ${earning.market_cap:,}")
+            md.append(f"- **Prihod firme:** ${earning.revenue:,}")
 
             if graph_path:
                 md.append("\n**Cena akcije poslednjih 15 dana:**\n")
                 md.append(f"![Price chart]({graph_path})")
 
-            # insert a page break so each company starts on its own page (except after last)
-            if idx != len(data) - 1:
-                md.append('<div class="page-break"></div>')
-            """
+            md.append('<div class="page-break"></div>')
 
             md.append("\n")
         return "\n".join(md)

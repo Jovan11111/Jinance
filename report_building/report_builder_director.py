@@ -4,75 +4,38 @@ from datetime import date
 import markdown as md_pkg
 from weasyprint import HTML
 
-from report_building.graph_builder import GraphBuilder
-from utils.singleton_meta import SingletonMeta
+from models.earnings_information import EarningsInformation
+from models.news_article import NewsArticle
+from report_building.earnings_buidler import EarningsBuilder
+from report_building.news_builder import NewsBuilder
 
 
-class ReportBuilder(metaclass=SingletonMeta):
-    def __init__(self):
-        print("ReportBuilder initialized")
-        self.graph_builder: GraphBuilder = GraphBuilder.get_instance()
+class ReportBuilderDirector:
+    def __init__(
+        self,
+    ):
+        self._earnings_builder = EarningsBuilder()
+        self._news_builder = NewsBuilder()
 
-    def build_markdown(self, data: dict) -> str:
+    @property
+    def earnings_builder(self) -> EarningsBuilder:
+        return self._earnings_builder
+
+    def build_markdown(
+        self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
+    ) -> str:
         today = date.today().strftime("%d.%m.%Y")
 
         md = []
         md.append(f"# Izveštaj za {today}")
-        md.append("## Earnings izveštaj\n")
-        md.append(
-            "Ovo je automatski generisan izveštaj o nadolazećim javnim objavama prihoda, u kom su prikazani osnovni podaci o narednih 5 firmi koje ce javno objaviti prihode. Podaci su dohvaceni sa yahoo finance besplatne pristupne tacke.\n"
-        )
-        for idx, (ticker, info) in enumerate(data.items()):
-            name = info.get("name", "")
-            earnings_date = info.get("date", "")
-            eps = info.get("eps", [])
-            market_cap = info.get("market_cap", 0)
-            revenue = info.get("revenue", 0)
-            prices = info.get("value_last_15_days", [])
-            prev_eps = info.get("previous_earnings", [])
-            expected_vals = [round(el.get("expected_eps"), 2) for el in prev_eps]
-            actual_vals = [round(el.get("actual_eps"), 2) for el in prev_eps]
-            price_changes = [round(el.get("price_diff"), 2) for el in prev_eps]
-            eps_avg = eps[0] if eps else 0
-            eps_low = eps[1] if eps else 0
-            eps_high = eps[2] if eps else 0
-
-            graph_path = self.graph_builder.build_price_graph(prices, ticker)
-
-            md.append(f"### {name} - {ticker}")
-            md.append(f"- **Datum earnings-a:** {earnings_date.strftime('%d.%m.%Y')}")
-            md.append(f"- **Prosečna EPS:** {eps_avg}")
-            md.append(f"- **Pesimistična EPS:** {eps_low}")
-            md.append(f"- **Optimistična EPS:** {eps_high}")
-
-            md.append("\n**Prethodni EPS**\n")
-            md.append("| | najskoriji | -> | -> | najstariji |")
-            md.append("|---|---|---|---|---|")
-            md.append(
-                f"| **Ocekivani** | {expected_vals[0]} | {expected_vals[1]} | {expected_vals[2]} | {expected_vals[3]} |"
-            )
-            md.append(
-                f"| **Stvarni** | {actual_vals[0]} | {actual_vals[1]} | {actual_vals[2]} | {actual_vals[3]} |"
-            )
-            md.append(
-                f"| **Promena cene (%)** | {price_changes[0]} | {price_changes[1]} | {price_changes[2]} | {price_changes[3]} |"
-            )
-            md.append("\n")
-            md.append(f"- **Vrednost firme:** ${market_cap:,}")
-            md.append(f"- **Prihod firme:** ${revenue:,}")
-
-            if graph_path:
-                md.append("\n**Cena akcije poslednjih 15 dana:**\n")
-                md.append(f"![Price chart]({graph_path})")
-
-            # insert a page break so each company starts on its own page (except after last)
-            if idx != len(data) - 1:
-                md.append('<div class="page-break"></div>')
-
+        md.append(self.earnings_builder.build_markdown(earnings_data))
+        md.append(self._news_builder.build_markdown(news_data))
         return "\n".join(md)
 
-    def create_pdf_report(self, data: dict) -> str:
-        md_content = self.build_markdown(data)
+    def create_pdf_report(
+        self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
+    ) -> str:
+        md_content = self.build_markdown(earnings_data, news_data)
 
         today_str = date.today().strftime("%Y%m%d")
 

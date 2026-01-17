@@ -1,5 +1,4 @@
 from jinance import Jinance
-from managers.news_manager import NewsManager
 
 
 def main():
@@ -8,6 +7,4 @@ def main():
 
 
 if __name__ == "__main__":
-    news_manager = NewsManager()
-    news_manager.get_latest_news()
-    # main()
+    main()

@@ -29,7 +29,7 @@ class NewsFilter:
         self, raw_news: list[NewsArticle], days_behind: int
     ) -> list[NewsArticle]:
         cutoff = self._time_cutoff(days_behind)
-        return [article for article in raw_news if article.pubDate >= cutoff]
+        return [article for article in raw_news if article.pub_time >= cutoff]
 
     def filter_by_seen_urls(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
         filtered_news = []

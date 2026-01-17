@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 import requests
 from dotenv import load_dotenv
@@ -28,6 +29,7 @@ class AiService(metaclass=SingletonMeta):
         return self._parse_response(response)
 
     def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
+        news_dicts = [article.to_dict() for article in news]
         return f"""
 You are a financial markets AI.
 
@@ -36,21 +38,22 @@ Each article has:
 - pubTime
 - title
 - summary
-- link
+- url
+- ticker
 
 Your task:
 Select the {top_k} articles that are MOST LIKELY to significantly impact stock prices in the upcoming days/weeks.
 
 Return ONLY a JSON array of article objects.
 Each object MUST contain exactly:
-pubTime, title, summary, link
+pubTime, title, summary, url, ticker
 
 DO NOT add explanations.
 DO NOT add extra fields.
 DO NOT return text outside JSON.
 
 Articles:
-{json.dumps(news, indent=2, default=str)}
+{json.dumps(news_dicts, indent=2, default=str)}
 """.strip()
 
     def _call_groq(self, prompt: str) -> str:
@@ -80,6 +83,28 @@ Articles:
             data = json.loads(response)
             if not isinstance(data, list):
                 raise ValueError("AI response is not a list")
-            return data
+
+            articles: list[NewsArticle] = []
+
+            for item in data:
+                if not isinstance(item, dict):
+                    raise ValueError("Article item is not a dict")
+
+                pub_time = item.get("pubTime")
+                if isinstance(pub_time, str):
+                    pub_time = datetime.fromisoformat(pub_time.replace("Z", "+00:00"))
+
+                articles.append(
+                    NewsArticle(
+                        title=item.get("title", ""),
+                        summary=item.get("summary", ""),
+                        pub_time=pub_time,
+                        url=item.get("url"),
+                        ticker=item.get("ticker", ""),
+                    )
+                )
+
+            return articles
+
         except Exception as e:
             raise RuntimeError(f"Invalid AI response: {response}") from e

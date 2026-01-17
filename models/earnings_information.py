@@ -11,9 +11,7 @@ class EarningsInformation:
         name: str,
         value_last_15_days: list[float],
         market_cap: int,
-        eps_avg: float,
-        eps_low: float,
-        eps_high: float,
+        eps: EpsInformation,
         date: datetime,
         revenue: int,
         previous_earnings: list[PreviousEarningsInformation],
@@ -22,7 +20,7 @@ class EarningsInformation:
         self._name: str = name
         self._value_last_15_days: list[float] = value_last_15_days
         self._market_cap: int = market_cap
-        self._eps: EpsInformation = EpsInformation(eps_avg, eps_low, eps_high)
+        self._eps: EpsInformation = eps
         self._date: datetime = date
         self._revenue: int = revenue
         self._previous_earnings: list[PreviousEarningsInformation] = previous_earnings
