@@ -2,6 +2,8 @@ import datetime
 
 
 class NewsArticle:
+    """Class that represents information about News articles that are in the report."""
+
     def __init__(
         self, title: str, summary: str, pub_time: datetime, url: str, ticker: str
     ):
@@ -13,25 +15,31 @@ class NewsArticle:
 
     @property
     def title(self) -> str:
+        """Getter for the title of the article."""
         return self._title
 
     @property
     def summary(self) -> str:
+        """Getter for the summary of the article"""
         return self._summary
 
     @property
     def pub_time(self) -> datetime:
+        """Getter for the publish time of the article"""
         return self._pub_time
 
     @property
     def url(self) -> str:
+        """Getter for the url to the article"""
         return self._url
 
     @property
     def ticker(self) -> str:
+        """Getter for a ticker that is most relevant to the article"""
         return self._ticker
 
     def to_dict(self) -> dict:
+        """Convert NewsArticle object to a dictionary."""
         return {
             "title": self._title,
             "summary": self._summary,

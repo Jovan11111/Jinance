@@ -11,6 +11,8 @@ from report_building.news_builder import NewsBuilder
 
 
 class ReportBuilderDirector:
+    """Class responsible for putting together the whole report and converting it into PDF."""
+
     def __init__(
         self,
     ):
@@ -19,23 +21,39 @@ class ReportBuilderDirector:
 
     @property
     def earnings_builder(self) -> EarningsBuilder:
+        """Getter for earnings builder that is being used."""
         return self._earnings_builder
 
-    def build_markdown(
+    @property
+    def news_builder(self) -> NewsBuilder:
+        """Getter for news buidler that is being used."""
+        return self._news_builder
+
+    def _build_markdown(
         self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
     ) -> str:
+        """Creates a whole report in .md format by calling all other builders it contains."""
         today = date.today().strftime("%d.%m.%Y")
 
         md = []
         md.append(f"# Izveštaj za {today}")
         md.append(self.earnings_builder.build_markdown(earnings_data))
-        md.append(self._news_builder.build_markdown(news_data))
+        md.append(self.news_builder.build_markdown(news_data))
         return "\n".join(md)
 
     def create_pdf_report(
         self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
     ) -> str:
-        md_content = self.build_markdown(earnings_data, news_data)
+        """Creates a pdf report that is a final produce of the whole aplication.
+
+        Args:
+            earnings_data (list[EarningsInformation]): Data about earnings that is supposed to be represented.
+            news_data (list[NewsArticle]): Data about news that is supposed to be represented.
+
+        Returns:
+            str: path to a pdf report that is created and saved.
+        """
+        md_content = self._build_markdown(earnings_data, news_data)
 
         today_str = date.today().strftime("%Y%m%d")
 

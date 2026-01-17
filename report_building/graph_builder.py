@@ -6,17 +6,31 @@ import matplotlib.pyplot as plt
 
 
 class GraphBuilder:
+    """Class responsible for creatings graphs that are represented in a report by using matplotlib library."""
+
     def __init__(self, output_dir="graphs"):
         print("GraphBuilder initialized")
         self.output_dir = output_dir
-        self.clear_graph_folder()
+        self._clear_graph_folder()
 
-    def clear_graph_folder(self):
+    def _clear_graph_folder(self):
+        """Deletes old graphs."""
         if os.path.exists(self.output_dir):
             shutil.rmtree(self.output_dir)
         os.makedirs(self.output_dir, exist_ok=True)
 
     def build_price_graph(self, prices: list[float], ticker: str) -> str:
+        """Creates a graph that represents the change of price of a given company.
+        Y axis is price [$].
+        X axis is time [days].
+
+        Args:
+            prices (list[float]): List of prices that are going to be shown on Y axis.
+            ticker (str): Company for which the prices are shown.
+
+        Returns:
+            str: path to a graph .png file.
+        """
         x = range(len(prices))
         pct_changes = [
             (prices[i] - prices[i - 1]) / prices[i - 1] * 100 if prices[i - 1] else 0.0

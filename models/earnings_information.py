@@ -5,6 +5,8 @@ from models.previous_earnings_information import PreviousEarningsInformation
 
 
 class EarningsInformation:
+    """Dataclass that represents earnings information that is to be displayed."""
+
     def __init__(
         self,
         ticker: str,
@@ -27,37 +29,46 @@ class EarningsInformation:
 
     @property
     def ticker(self) -> str:
+        """Getter for ticker symbol of the company."""
         return self._ticker
 
     @property
     def name(self) -> str:
+        """Getter for company name."""
         return self._name
 
     @property
     def value_last_15_days(self) -> list[float]:
+        """Getter for stock prices in the last 15 days."""
         return self._value_last_15_days
 
     @property
     def market_cap(self) -> int:
+        """Getter for market capitalization of the company."""
         return self._market_cap
 
     @property
     def eps(self) -> EpsInformation:
+        """Getter for Earnings Per Share information."""
         return self._eps
 
     @property
     def date(self) -> datetime:
+        """Getter for earnings announcement date."""
         return self._date
 
     @property
     def revenue(self) -> int:
+        """Getter for company revenue."""
         return self._revenue
 
     @property
     def previous_earnings(self) -> list[PreviousEarningsInformation]:
+        """Getter for previous earnings EPS information."""
         return self._previous_earnings
 
     def to_dict(self) -> dict:
+        """Convert the EarningsInformation object to a dictionary."""
         return {
             "ticker": self._ticker,
             "name": self._name,

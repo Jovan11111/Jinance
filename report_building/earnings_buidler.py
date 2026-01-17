@@ -4,14 +4,25 @@ from report_building.report_builder import ReportBuilder
 
 
 class EarningsBuilder(ReportBuilder):
+    """Class responsible for creating a part of the report that includes Earnings information in .md format."""
+
     def __init__(self):
         self._graph_builder = GraphBuilder()
 
     @property
     def graph_builder(self) -> GraphBuilder:
+        """Getter for GraphBuilder object used to create graphs that are included."""
         return self._graph_builder
 
     def build_markdown(self, earnings_data: list[EarningsInformation]) -> str:
+        """Returns .md formated report part that includes all given upcoming earnings information.
+
+        Args:
+            earnings_data (list[EarningsInformation]): Information about upcoming earnings that needs to be represented.
+
+        Returns:
+            str: String that contains all information in a formated way.
+        """
         md = []
         md.append("## Earnings izveštaj\n")
         md.append(

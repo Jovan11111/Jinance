@@ -3,10 +3,20 @@ from report_building.report_builder import ReportBuilder
 
 
 class NewsBuilder(ReportBuilder):
+    """Class responsible for building the part of the report that conatins relevant news information in a .md format."""
+
     def __init__(self):
         print("NewsBuilder initialized")
 
     def build_markdown(self, news_data: list[NewsArticle]) -> str:
+        """Returns .md formated report part that includes all given news information.
+
+        Args:
+            news_data (list[NewsArticle]): Information about relevant news articles that needs to be represented.
+
+        Returns:
+            str: String that contains all information in a formated way.
+        """
         md: list[str] = []
 
         md.append("## Najbitnije vesti\n")

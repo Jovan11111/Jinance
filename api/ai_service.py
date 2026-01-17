@@ -12,6 +12,11 @@ load_dotenv()
 
 
 class AiService(metaclass=SingletonMeta):
+    """Class responsible for communicating with external AI API.
+
+    Chosen AI API is: GROQ, free model llama-3.1-8b-instant
+    """
+
     GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
     MODEL = "llama-3.1-8b-instant"
 
@@ -23,12 +28,30 @@ class AiService(metaclass=SingletonMeta):
     def filter_news(
         self, news: list[NewsArticle], top_k: int = 10
     ) -> list[NewsArticle]:
+        """Filteres a list of news, and returns only those that could affect the market the most.
+
+        Args:
+            news (list[NewsArticle]): list of all news articles to filter
+            top_k (int, optional): Number of news that are left after filtering. Defaults to 10.
+
+        Returns:
+            list[NewsArticle]: list of articles most likely to affect the market
+        """
         prompt = self._build_prompt(news, top_k)
         response = self._call_groq(prompt)
 
         return self._parse_response(response)
 
     def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
+        """Builds the prompt sent to the AI model.
+
+        Args:
+            news (list[NewsArticle]): list of news articles to filter
+            top_k (int): Number of news that are left after filtering
+
+        Returns:
+            str: Promt string that is to be sent to the AI model
+        """
         news_dicts = [article.to_dict() for article in news]
         return f"""
 You are a financial markets AI.
@@ -57,6 +80,14 @@ Articles:
 """.strip()
 
     def _call_groq(self, prompt: str) -> str:
+        """Sends a request to an AI model
+
+        Args:
+            prompt (str): Promt to be sent
+
+        Returns:
+            str: Response from the AI model
+        """
         payload = {
             "model": self.MODEL,
             "messages": [{"role": "user", "content": prompt}],
@@ -79,6 +110,18 @@ Articles:
         return response.json()["choices"][0]["message"]["content"]
 
     def _parse_response(self, response: str) -> list[NewsArticle]:
+        """Since AI doesn't know about internal data classes, parses the response to a list of NewsArticles
+
+        Args:
+            response (str): Response string from the AI model
+
+        Raises:
+            ValueError: Raised when the response is not valid JSON or doesn't match expected format
+            RuntimeError: Raised if any type error occurs during parsing
+
+        Returns:
+            list[NewsArticle]: List of NewsArticle objects parsed from the response
+        """
         try:
             data = json.loads(response)
             if not isinstance(data, list):

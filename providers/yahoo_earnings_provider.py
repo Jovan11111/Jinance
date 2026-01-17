@@ -9,10 +9,20 @@ from providers.earnings_provider import EarningsProvider
 
 
 class YahooEarningsProvider(EarningsProvider):
+    """Class that is responsible for providing Earnigns information by using yahoo finance API."""
 
     def fetch_earnings(
         self, tickers: list[str], cutoff: datetime
     ) -> list[EarningsInformation]:
+        """Return relevant Earnings report informtion for given companies.
+
+        Args:
+            tickers (list[str]): List of ticker for which to check if there is an upcoming earnings report.
+            cutoff (datetime): How far into the future a report can't be to be included.
+
+        Returns:
+            list[EarningsInformation]: List of relevant earnings report inforation for given companies.
+        """
         result: list[EarningsInformation] = []
         for ticker in tickers:
             try:
@@ -52,6 +62,7 @@ class YahooEarningsProvider(EarningsProvider):
         return result
 
     def _get_stock_calendar(self, stock: yf.Ticker) -> dict | None:
+        """Get the stock calendar that conatins all usefull information."""
         try:
             calendar = stock.calendar
             return calendar
@@ -60,6 +71,9 @@ class YahooEarningsProvider(EarningsProvider):
             return None
 
     def _get_earnings_date(self, calendar: dict, cutoff: datetime) -> datetime | None:
+        """Get the date of the first upcoming earnings report for a company.
+
+        Returs a date only if it is sooner that cutoff time."""
         try:
             earnings_date = calendar.get("Earnings Date", None)[0]
             if earnings_date is None or not (
@@ -72,6 +86,7 @@ class YahooEarningsProvider(EarningsProvider):
             return None
 
     def _get_company_name(self, stock: yf.Ticker) -> str:
+        """Returns a name of the company based on ticker."""
         try:
             info = stock.info or {}
             company_name = info.get("shortName", "")
@@ -81,6 +96,7 @@ class YahooEarningsProvider(EarningsProvider):
             return ""
 
     def _get_market_cap(self, stock: yf.Ticker) -> int:
+        """Returns the market cap of a company."""
         try:
             info = stock.info or {}
             market_cap = info.get("marketCap", 0)
@@ -90,6 +106,7 @@ class YahooEarningsProvider(EarningsProvider):
             return 0
 
     def _get_eps(self, calendar: dict) -> EpsInformation | None:
+        """Returns EPS estimates for the next upcoming earnings report."""
         try:
             eps_avg = calendar.get("Earnings Average", None)
             eps_low = calendar.get("Earnings Low", None)
@@ -104,6 +121,7 @@ class YahooEarningsProvider(EarningsProvider):
             return None
 
     def _get_revenue(self, calendar: dict) -> int:
+        """Returns the revenue of the company."""
         try:
             revenue = calendar.get("Revenue Average", 0)
             return revenue
@@ -112,6 +130,7 @@ class YahooEarningsProvider(EarningsProvider):
             return 0
 
     def _get_price_last_15_days(self, stock: yf.Ticker) -> list[float]:
+        """Returns the Closing price of a stock of the last 15 days."""
         try:
             hist = stock.history(period="15d")
             if not hist.empty:
@@ -124,6 +143,7 @@ class YahooEarningsProvider(EarningsProvider):
     def _get_previous_earnings(
         self, stock: yf.Ticker
     ) -> list[PreviousEarningsInformation]:
+        """Returns EPS information about the last 4 earnings."""
         prev_earnings: list[PreviousEarningsInformation] = []
         try:
             earnings_history = stock.get_earnings_dates()

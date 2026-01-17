@@ -4,16 +4,6 @@ class SingletonMeta(type):
     - `__call__` creates the single instance on first construction and returns it afterwards.
     - `get_instance(*args, **kwargs)` returns the instance, creating it if necessary.
     - `clear()` resets the stored instance to None.
-
-    Usage:
-        class Foo(metaclass=SingletonMeta):
-            def __init__(self, x=1):
-                self.x = x
-
-        # create or get instance
-        Foo(x=2)                # __call__ will create the singleton
-        Foo.get_instance()      # returns the same instance
-        Foo.clear()             # clears the instance
     """
 
     def __call__(cls, *args, **kwargs):

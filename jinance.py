@@ -7,25 +7,22 @@ from utils.singleton_meta import SingletonMeta
 
 
 class Jinance(metaclass=SingletonMeta):
+    """Main facade class of the aplication that manages all data, sends it to report builders."""
+
     def __init__(self):
         self._earnings_manager = EarningsManager("yahoo")
         self._news_manager = NewsManager("yahoo")
         self._report_builder = ReportBuilderDirector()
 
-    @property
-    def earnings_manager(self) -> EarningsManager:
-        return self._earnings_manager
-
-    @property
-    def report_builder(self) -> ReportBuilderDirector:
-        return self._report_builder
-
-    @property
-    def news_manager(self) -> NewsManager:
-        return self._news_manager
-
     def generate_report(self, number_of_companies: int = 5) -> str:
+        """Generates a report about all relevant information about the market.
 
+        Args:
+            number_of_companies (int, optional): Number of companies for which upcoming earnings reports are shown. Defaults to 5.
+
+        Returns:
+            str: path to a pdf file that represents generated report.
+        """
         earnings_data: list[EarningsInformation] = (
             self.earnings_manager.get_latest_upcoming_earnings(number_of_companies)
         )

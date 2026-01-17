@@ -5,7 +5,7 @@ from utils import constants
 
 
 class NewsManager:
-    """Fetch latest relevant news for given tickers."""
+    """Manages fetching and filtering news articles."""
 
     def __init__(
         self,
@@ -13,7 +13,6 @@ class NewsManager:
         days_behind=1,
         tickers=constants.TICKERS_SP_100,
     ):
-        print("NewsManager initialized")
         self.days_behind = days_behind
         self.tickers = tickers
         if provider == "yahoo":
@@ -21,6 +20,11 @@ class NewsManager:
         self.filter = NewsFilter()
 
     def get_latest_news(self) -> list[NewsArticle]:
+        """Returns 10 most important news in the selected time period.
+
+        Returns:
+            list[NewsArticle]: List of news articles.
+        """
         all_news = self.provider.fetch_news(self.tickers, self.days_behind)
         filtered_news = self.filter.filter_news(all_news, 10, self.days_behind)
         return filtered_news
