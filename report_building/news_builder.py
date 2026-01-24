@@ -31,4 +31,6 @@ class NewsBuilder(ReportBuilder):
             md.append(f"{article.summary}\n")
             md.append("---\n")
 
+        md.append('<div class="page-break"></div>')
+
         return "\n".join(md)

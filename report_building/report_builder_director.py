@@ -1,13 +1,16 @@
 import os
 from datetime import date
+from typing import Dict
 
 import markdown as md_pkg
 from weasyprint import HTML
 
 from models.earnings_information import EarningsInformation
 from models.news_article import NewsArticle
+from models.price_performance_information import PricePerformanceInformation
 from report_building.earnings_buidler import EarningsBuilder
 from report_building.news_builder import NewsBuilder
+from report_building.price_performance_builder import PricePerformanceBuilder
 
 
 class ReportBuilderDirector:
@@ -18,6 +21,7 @@ class ReportBuilderDirector:
     ):
         self._earnings_builder = EarningsBuilder()
         self._news_builder = NewsBuilder()
+        self._price_performance_builder = PricePerformanceBuilder()
 
     @property
     def earnings_builder(self) -> EarningsBuilder:
@@ -29,8 +33,16 @@ class ReportBuilderDirector:
         """Getter for news buidler that is being used."""
         return self._news_builder
 
+    @property
+    def price_performance_builder(self) -> PricePerformanceBuilder:
+        """Getter for price performance builder that is being used."""
+        return self._price_performance_builder
+
     def _build_markdown(
-        self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
+        self,
+        earnings_data: list[EarningsInformation],
+        news_data: list[NewsArticle],
+        price_performance_data: Dict[str, list[PricePerformanceInformation]],
     ) -> str:
         """Creates a whole report in .md format by calling all other builders it contains."""
         today = date.today().strftime("%d.%m.%Y")
@@ -39,10 +51,14 @@ class ReportBuilderDirector:
         md.append(f"# Izveštaj za {today}")
         md.append(self.earnings_builder.build_markdown(earnings_data))
         md.append(self.news_builder.build_markdown(news_data))
+        md.append(self.price_performance_builder.build_markdown(price_performance_data))
         return "\n".join(md)
 
     def create_pdf_report(
-        self, earnings_data: list[EarningsInformation], news_data: list[NewsArticle]
+        self,
+        earnings_data: list[EarningsInformation],
+        news_data: list[NewsArticle],
+        price_performance_data: Dict[str, list[PricePerformanceInformation]],
     ) -> str:
         """Creates a pdf report that is a final produce of the whole aplication.
 
@@ -53,7 +69,9 @@ class ReportBuilderDirector:
         Returns:
             str: path to a pdf report that is created and saved.
         """
-        md_content = self._build_markdown(earnings_data, news_data)
+        md_content = self._build_markdown(
+            earnings_data, news_data, price_performance_data
+        )
 
         today_str = date.today().strftime("%Y%m%d")
 

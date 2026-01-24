@@ -17,4 +17,3 @@ class NewsProvider(ABC):
         Returns:
             list[NewsArticle]: All news articles in a given time period.
         """
-        pass
