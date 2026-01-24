@@ -43,7 +43,7 @@ class NewsArticle:
         return {
             "title": self._title,
             "summary": self._summary,
-            "pub_time": self._pub_time.isoformat(),
+            "pub_time": self._pub_time.isoformat() if self.pub_time else "",
             "url": self._url,
             "ticker": self._ticker,
         }

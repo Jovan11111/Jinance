@@ -48,9 +48,9 @@ class NewsFilter:
         """Filter out news articles with same URLs"""
         filtered_news = []
         for article in raw_news:
-            if article.url not in self._seen_urls:
+            if article.url not in self.seen_urls:
                 filtered_news.append(article)
-                self._seen_urls.add(article.url)
+                self.seen_urls.add(article.url)
         return filtered_news
 
     def _filter_by_keywords(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:

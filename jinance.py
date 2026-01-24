@@ -24,11 +24,11 @@ class Jinance(metaclass=SingletonMeta):
             str: path to a pdf file that represents generated report.
         """
         earnings_data: list[EarningsInformation] = (
-            self.earnings_manager.get_latest_upcoming_earnings(number_of_companies)
+            self._earnings_manager.get_latest_upcoming_earnings(number_of_companies)
         )
 
-        news_data: list[NewsArticle] = self.news_manager.get_latest_news()
+        news_data: list[NewsArticle] = self._news_manager.get_latest_news()
 
-        pdf_path = self.report_builder.create_pdf_report(earnings_data, news_data)
+        pdf_path = self._report_builder.create_pdf_report(earnings_data, news_data)
 
         return pdf_path

@@ -75,7 +75,7 @@ class EarningsInformation:
             "value_last_15_days": self._value_last_15_days,
             "market_cap": self._market_cap,
             "eps": self._eps.to_dict(),
-            "date": self._date.isoformat(),
+            "date": self._date.isoformat() if self.date else "",
             "revenue": self._revenue,
             "previous_earnings": [
                 prev_earn.to_dict() for prev_earn in self._previous_earnings
