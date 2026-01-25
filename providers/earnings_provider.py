@@ -20,4 +20,3 @@ class EarningsProvider(ABC):
         Returns:
             list[EarningsInformation]: List of relevant Earnings information.
         """
-        pass

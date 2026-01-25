@@ -11,4 +11,3 @@ class ReportBuilder(ABC):
         Returns:
             str: Contains a part of the report in .md format.
         """
-        pass

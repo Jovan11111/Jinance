@@ -38,9 +38,9 @@ class YahooNewsProvider(NewsProvider):
                     continue
                 title = content.get("title", "")
                 summary = content.get("summary", "")
-                pub_date_str = content.get("pubDate")
+                pub_date_str = content.get("pubDate", "1970-01-01T00:00:00Z")
                 pub_date = datetime.fromisoformat(pub_date_str.replace("Z", "+00:00"))
-                url = content.get("canonicalUrl", {}).get("url")
+                url = content.get("canonicalUrl", {}).get("url", "")
                 result.append(NewsArticle(title, summary, pub_date, url, ticker))
 
         return result
