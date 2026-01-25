@@ -1,15 +1,18 @@
+import logging
 import os
 import shutil
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 
+logger = logging.getLogger(__name__)
+
 
 class GraphBuilder:
     """Class responsible for creatings graphs that are represented in a report by using matplotlib library."""
 
     def __init__(self, output_dir="graphs"):
-        print("GraphBuilder initialized")
+        logger.debug("GraphBuilder initialized.")
         self.output_dir = output_dir
         self._clear_graph_folder()
 
@@ -24,6 +27,7 @@ class GraphBuilder:
         Y axis is price [$].
         X axis is time [days].
         """
+        logger.debug(f"Building price graph for {ticker}.")
         x = range(len(prices))
         detailed = len(prices) <= 20
 

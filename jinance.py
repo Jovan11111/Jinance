@@ -1,3 +1,4 @@
+import logging
 from typing import Dict
 
 from managers.earnings_manager import EarningsManager
@@ -7,13 +8,18 @@ from models.earnings_information import EarningsInformation
 from models.news_article import NewsArticle
 from models.price_performance_information import PricePerformanceInformation
 from report_building.report_builder_director import ReportBuilderDirector
+from utils.logger import setup_logging
 from utils.singleton_meta import SingletonMeta
+
+logger = logging.getLogger(__name__)
 
 
 class Jinance(metaclass=SingletonMeta):
     """Main facade class of the aplication that manages all data, sends it to report builders."""
 
     def __init__(self):
+        setup_logging()
+        logger.debug("Jinance instance created.")
         self._earnings_manager = EarningsManager("yahoo")
         self._news_manager = NewsManager("yahoo")
         self._price_performance_manager = PricePerformanceManager("yahoo")
@@ -28,6 +34,7 @@ class Jinance(metaclass=SingletonMeta):
         Returns:
             str: path to a pdf file that represents generated report.
         """
+        logger.debug("Generating report.")
         earnings_data: list[EarningsInformation] = (
             self._earnings_manager.get_latest_upcoming_earnings(number_of_companies)
         )

@@ -1,3 +1,4 @@
+import logging
 from datetime import date, datetime, timedelta
 
 import yfinance as yf
@@ -6,6 +7,8 @@ from models.earnings_information import EarningsInformation
 from models.eps_information import EpsInformation
 from models.previous_earnings_information import PreviousEarningsInformation
 from providers.earnings_provider import EarningsProvider
+
+logger = logging.getLogger(__name__)
 
 
 class YahooEarningsProvider(EarningsProvider):
@@ -23,6 +26,9 @@ class YahooEarningsProvider(EarningsProvider):
         Returns:
             list[EarningsInformation]: List of relevant earnings report inforation for given companies.
         """
+        logger.debug(
+            f"Fetching all earnings information until the {cutoff} using Yahoo Finance API."
+        )
         result: list[EarningsInformation] = []
         for ticker in tickers:
             try:
@@ -57,7 +63,7 @@ class YahooEarningsProvider(EarningsProvider):
                 )
 
             except Exception as e:
-                print(f"Error fetching earnings for {ticker}: {e}")
+                logger.warning(f"Error fetching earnings for {ticker}: {e}")
                 continue
         return result
 
@@ -67,7 +73,7 @@ class YahooEarningsProvider(EarningsProvider):
             calendar = stock.calendar
             return calendar
         except Exception as e:
-            print(f"Error fetching calendar for stock: {e}")
+            logger.warning(f"Error fetching calendar for stock: {e}")
             return None
 
     def _get_earnings_date(self, calendar: dict, cutoff: datetime) -> datetime | None:
@@ -82,7 +88,7 @@ class YahooEarningsProvider(EarningsProvider):
                 return None
             return earnings_date
         except Exception as e:
-            print(f"Error fetching earnings date from calendar: {e}")
+            logger.warning(f"Error fetching earnings date from calendar: {e}")
             return None
 
     def _get_company_name(self, stock: yf.Ticker) -> str:
@@ -92,7 +98,7 @@ class YahooEarningsProvider(EarningsProvider):
             company_name = info.get("shortName", "")
             return company_name
         except Exception as e:
-            print(f"Error fetching company name: {e}")
+            logger.warning(f"Error fetching company name: {e}")
             return ""
 
     def _get_market_cap(self, stock: yf.Ticker) -> int:
@@ -102,7 +108,7 @@ class YahooEarningsProvider(EarningsProvider):
             market_cap = info.get("marketCap", 0)
             return market_cap
         except Exception as e:
-            print(f"Error fetching market cap: {e}")
+            logger.warning(f"Error fetching market cap: {e}")
             return 0
 
     def _get_eps(self, calendar: dict) -> EpsInformation | None:
@@ -117,7 +123,7 @@ class YahooEarningsProvider(EarningsProvider):
                 return eps_info
             return None
         except Exception as e:
-            print(f"Error fetching EPS information: {e}")
+            logger.warning(f"Error fetching EPS information: {e}")
             return None
 
     def _get_revenue(self, calendar: dict) -> int:
@@ -126,7 +132,7 @@ class YahooEarningsProvider(EarningsProvider):
             revenue = calendar.get("Revenue Average", 0)
             return revenue
         except Exception as e:
-            print(f"Error fetching revenue information: {e}")
+            logger.warning(f"Error fetching revenue information: {e}")
             return 0
 
     def _get_price_last_15_days(self, stock: yf.Ticker) -> list[float]:
@@ -137,7 +143,7 @@ class YahooEarningsProvider(EarningsProvider):
                 return hist["Close"].round(2).tolist()
             return []
         except Exception as e:
-            print(f"Error fetching price history: {e}")
+            logger.warning(f"Error fetching price history: {e}")
             return []
 
     def _get_previous_earnings(
@@ -172,5 +178,5 @@ class YahooEarningsProvider(EarningsProvider):
                     )
             return prev_earnings
         except Exception as e:
-            print(f"Error fetching previous earnings information: {e}")
+            logger.warning(f"Error fetching previous earnings information: {e}")
             return prev_earnings

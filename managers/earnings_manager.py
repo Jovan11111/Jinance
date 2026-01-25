@@ -1,9 +1,12 @@
+import logging
 from datetime import datetime, timedelta
 
 import utils.constants as constants
 from models.earnings_information import EarningsInformation
 from providers.earnings_provider import EarningsProvider
-from providers.yahoo_earnings_provider import YahooEarningsProvider
+from providers.yahoo.yahoo_earnings_provider import YahooEarningsProvider
+
+logger = logging.getLogger(__name__)
 
 
 class EarningsManager:
@@ -15,6 +18,7 @@ class EarningsManager:
         days_ahead=30,
         tickers=constants.TICKERS_SP_100,
     ):
+        logger.debug("EarnigsManager initialized.")
         self._days_ahead = days_ahead
         self._tickers: list[str] = tickers
         if provider == "yahoo":
@@ -46,6 +50,9 @@ class EarningsManager:
         Returns:
             list[EarningsInformation]: List of EarningsInformation objects that contain earnings data.
         """
+        logger.debug(
+            f"Fetching latest upcoming earnings for {number_of_companies} companies."
+        )
         cutoff = datetime.today().date() + timedelta(days=self.days_ahead)
         earnings = self._provider.fetch_earnings(self.tickers, cutoff=cutoff)
 

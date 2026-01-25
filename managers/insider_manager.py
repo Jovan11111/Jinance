@@ -9,7 +9,7 @@ from utils.singleton_meta import SingletonMeta
 
 class InsiderManager(metaclass=SingletonMeta):
     def __init__(self, days_behind=30, tickers=constants.TICKERS_SP_10):
-        print("Initializing InsiderManager")
+        print("InsiderManager initialized")
         self.insiders = []
         self.tickers = tickers
         self.days_behind = days_behind

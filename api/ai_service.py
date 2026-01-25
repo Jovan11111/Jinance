@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime
 
@@ -9,6 +10,8 @@ from models.news_article import NewsArticle
 from utils.singleton_meta import SingletonMeta
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 
 class AiService(metaclass=SingletonMeta):
@@ -21,8 +24,10 @@ class AiService(metaclass=SingletonMeta):
     MODEL = "llama-3.1-8b-instant"
 
     def __init__(self):
+        logger.debug("AI Service initialized.")
         self.api_key = os.getenv("GROQ_API_KEY")
         if not self.api_key:
+            logger.error("GROQ_API_KEY not found in environment")
             raise RuntimeError("GROQ_API_KEY not found in environment")
 
     def filter_news(
@@ -37,6 +42,7 @@ class AiService(metaclass=SingletonMeta):
         Returns:
             list[NewsArticle]: list of articles most likely to affect the market
         """
+        logger.debug("Filtering news articles using AI service.")
         prompt = self._build_prompt(news, top_k)
         response = self._call_groq(prompt)
 
@@ -52,6 +58,7 @@ class AiService(metaclass=SingletonMeta):
         Returns:
             str: Promt string that is to be sent to the AI model
         """
+        logger.debug("Building prompt for AI model.")
         news_dicts = [article.to_dict() for article in news]
         return f"""
 You are a financial markets AI.
@@ -88,6 +95,7 @@ Articles:
         Returns:
             str: Response from the AI model
         """
+        logger.debug("Calling GROQ AI model.")
         payload = {
             "model": self.MODEL,
             "messages": [{"role": "user", "content": prompt}],
@@ -123,14 +131,17 @@ Articles:
             list[NewsArticle]: List of NewsArticle objects parsed from the response
         """
         try:
+            logger.debug("Parsing response from AI model.")
             data = json.loads(response)
             if not isinstance(data, list):
+                logger.error("AI response is not a list")
                 raise ValueError("AI response is not a list")
 
             articles: list[NewsArticle] = []
 
             for item in data:
                 if not isinstance(item, dict):
+                    logger.error("Article item is not a dict")
                     raise ValueError("Article item is not a dict")
 
                 pub_time = item.get("pubTime")
@@ -150,4 +161,5 @@ Articles:
             return articles
 
         except Exception as e:
+            logger.error(f"Error parsing AI response: {e}")
             raise RuntimeError(f"Invalid AI response: {response}") from e

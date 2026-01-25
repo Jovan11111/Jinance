@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import date
 from typing import Dict
@@ -12,6 +13,8 @@ from report_building.earnings_buidler import EarningsBuilder
 from report_building.news_builder import NewsBuilder
 from report_building.price_performance_builder import PricePerformanceBuilder
 
+logger = logging.getLogger(__name__)
+
 
 class ReportBuilderDirector:
     """Class responsible for putting together the whole report and converting it into PDF."""
@@ -19,6 +22,7 @@ class ReportBuilderDirector:
     def __init__(
         self,
     ):
+        logger.debug("ReportBuilderDirector initialized.")
         self._earnings_builder = EarningsBuilder()
         self._news_builder = NewsBuilder()
         self._price_performance_builder = PricePerformanceBuilder()
@@ -45,6 +49,7 @@ class ReportBuilderDirector:
         price_performance_data: Dict[str, list[PricePerformanceInformation]],
     ) -> str:
         """Creates a whole report in .md format by calling all other builders it contains."""
+        logger.debug("Building markdown content for the report.")
         today = date.today().strftime("%d.%m.%Y")
 
         md = []
@@ -69,6 +74,7 @@ class ReportBuilderDirector:
         Returns:
             str: path to a pdf report that is created and saved.
         """
+        logger.debug("Creating PDF report.")
         md_content = self._build_markdown(
             earnings_data, news_data, price_performance_data
         )

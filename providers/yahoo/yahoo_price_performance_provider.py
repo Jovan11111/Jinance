@@ -1,7 +1,11 @@
+import logging
+
 import yfinance as yf
 
 from models.price_performance_information import PricePerformanceInformation
 from providers.price_performance_provider import PricePerformanceProvider
+
+logger = logging.getLogger(__name__)
 
 
 class YahooPricePerformanceProvider(PricePerformanceProvider):
@@ -18,6 +22,9 @@ class YahooPricePerformanceProvider(PricePerformanceProvider):
         Returns:
             list[PricePerformanceInformation]: List of price performances for all tickers.
         """
+        logger.debug(
+            f"Fetching all price performance data in the last {days_behind} days using Yahoo Finance API."
+        )
         result: list[PricePerformanceInformation] = []
         for ticker in tickers:
             try:
@@ -30,6 +37,6 @@ class YahooPricePerformanceProvider(PricePerformanceProvider):
                         )
                     )
             except Exception as e:
-                print(f"Error fetching price performance for {ticker}: {e}")
+                logger.warning(f"Error fetching price performance for {ticker}: {e}")
                 continue
         return result

@@ -1,9 +1,12 @@
+import logging
 from datetime import datetime
 
 import yfinance as yf
 
 from models.news_article import NewsArticle
 from providers.news_provider import NewsProvider
+
+logger = logging.getLogger(__name__)
 
 
 class YahooNewsProvider(NewsProvider):
@@ -19,6 +22,9 @@ class YahooNewsProvider(NewsProvider):
         Returns:
             list[NewsArticle]: List of articles that have been posted in the last **days_behind** days.
         """
+        logger.debug(
+            f"Fetching all news in the last {days_behind} days using Yahoo Finance API."
+        )
         result: list[NewsArticle] = []
         limit = self._news_limit(days_behind)
 

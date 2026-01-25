@@ -1,12 +1,17 @@
+import logging
+
 from models.earnings_information import EarningsInformation
 from report_building.graph_builder import GraphBuilder
 from report_building.report_builder import ReportBuilder
+
+logger = logging.getLogger(__name__)
 
 
 class EarningsBuilder(ReportBuilder):
     """Class responsible for creating a part of the report that includes Earnings information in .md format."""
 
     def __init__(self):
+        logger.debug("EarningsBuilder initialized.")
         self._graph_builder = GraphBuilder()
 
     @property
@@ -23,6 +28,7 @@ class EarningsBuilder(ReportBuilder):
         Returns:
             str: String that contains all information in a formated way.
         """
+        logger.debug("Building earnings markdown report part.")
         md = []
         md.append("## Earnings izveštaj\n")
         md.append(
