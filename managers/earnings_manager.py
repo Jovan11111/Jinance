@@ -14,14 +14,17 @@ class EarningsManager:
 
     def __init__(
         self,
-        provider: str,
-        days_ahead=30,
+        provider: str = "yahoo",
+        days_ahead: int=30,
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("EarnigsManager initialized.")
-        self._days_ahead = days_ahead
+        self._days_ahead = days_ahead if days_ahead > 0 else 30
         self._tickers: list[str] = tickers
         if provider == "yahoo":
+            self._provider: EarningsProvider = YahooEarningsProvider()
+        else:
+            logger.warning("Chose a non existant provider, initializing a default one...")
             self._provider: EarningsProvider = YahooEarningsProvider()
 
     @property
@@ -54,7 +57,7 @@ class EarningsManager:
             f"Fetching latest upcoming earnings for {number_of_companies} companies."
         )
         cutoff = datetime.today().date() + timedelta(days=self.days_ahead)
-        earnings = self._provider.fetch_earnings(self.tickers, cutoff=cutoff)
+        earnings = self.provider.fetch_earnings(self.tickers, cutoff=cutoff)
 
         earnings.sort(key=lambda e: e.date)
         return earnings[:number_of_companies]

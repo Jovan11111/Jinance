@@ -30,7 +30,7 @@ class ReportInformation:
     def to_dict(self) -> dict:
         """Convert the ReportInformation object to dicttionary."""
         return {
-            "earnings_information": self.earnings_information, # [earn.to_dict for earn in earnings_information]
-            "news": self.news, # [art.to_dict for art in news]
-            "price_performance_information": self.price_performance_information, # [performance.to_dict for performance in price_performance_information]
+            "earnings_information": [earn.to_dict() for earn in self.earnings_information],
+            "news": [art.to_dict() for art in self.news],
+            "price_performance_information": [performance.to_dict() for performance in self.price_performance_information]
         }
