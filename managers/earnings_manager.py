@@ -15,7 +15,7 @@ class EarningsManager:
     def __init__(
         self,
         provider: str = "yahoo",
-        days_ahead: int=30,
+        days_ahead: int = 30,
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("EarnigsManager initialized.")
@@ -24,7 +24,9 @@ class EarningsManager:
         if provider == "yahoo":
             self._provider: EarningsProvider = YahooEarningsProvider()
         else:
-            logger.warning("Chose a non existant provider, initializing a default one...")
+            logger.warning(
+                "Chose a non existant provider, initializing a default one..."
+            )
             self._provider: EarningsProvider = YahooEarningsProvider()
 
     @property
@@ -58,6 +60,6 @@ class EarningsManager:
         )
         cutoff = datetime.today().date() + timedelta(days=self.days_ahead)
         earnings = self.provider.fetch_earnings(self.tickers, cutoff=cutoff)
-
+        earnings = [e for e in earnings if e is not None and e.date is not None]
         earnings.sort(key=lambda e: e.date)
         return earnings[:number_of_companies]

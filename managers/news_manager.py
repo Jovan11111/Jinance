@@ -13,14 +13,19 @@ class NewsManager:
 
     def __init__(
         self,
-        provider: str,
+        provider: str = "yahoo",
         days_behind=1,
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("NewsManager initialized.")
-        self.days_behind = days_behind
+        self.days_behind = days_behind if days_behind > 0 else 1
         self.tickers = tickers
         if provider == "yahoo":
+            self.provider = YahooNewsProvider()
+        else:
+            logger.warning(
+                "Chose a non existant provider, initializing a default one..."
+            )
             self.provider = YahooNewsProvider()
         self.filter = NewsFilter()
 

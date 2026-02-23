@@ -4,7 +4,9 @@ from models.previous_earnings_information import PreviousEarningsInformation
 class TestPreviousEarningsInformation:
     """Test class for PreviousEarningsInformation model."""
 
-    def test__create_previous_earnings_information__fields_have_given_values(self, create_prev_eps_info: PreviousEarningsInformation):
+    def test__create_previous_earnings_information__fields_have_given_values(
+        self, create_prev_eps_info: PreviousEarningsInformation
+    ):
         """Test that PreviousEarningsInformation is created correctly."""
         pei = create_prev_eps_info
         assert pei.expected_eps == 1.5

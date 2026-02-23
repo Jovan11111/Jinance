@@ -5,7 +5,9 @@ from models.eps_information import EpsInformation
 class TestEarningsInformation:
     """Test class for EarningsInformation model."""
 
-    def test__create_earnings_information__fields_have_given_values(self, create_eps_info: EpsInformation, create_earn_info: EarningsInformation):
+    def test__create_earnings_information__fields_have_given_values(
+        self, create_eps_info: EpsInformation, create_earn_info: EarningsInformation
+    ):
         """Test that EarningsInformation is created correctly."""
         epsi = create_eps_info
         ei = create_earn_info
@@ -18,9 +20,10 @@ class TestEarningsInformation:
         assert ei.revenue == 1234567
         assert ei.previous_earnings == []
 
-    def test__to_dictearnings_information__dict_returned_with_given_values(self, create_eps_info: EpsInformation, create_earn_info: EarningsInformation):
+    def test__to_dictearnings_information__dict_returned_with_given_values(
+        self, create_eps_info: EpsInformation, create_earn_info: EarningsInformation
+    ):
         """Test that to_dict returns correct dictionary."""
-        epsi = create_eps_info
         ei = create_earn_info
 
         assert ei.to_dict() == {

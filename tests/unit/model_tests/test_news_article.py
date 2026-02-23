@@ -6,7 +6,9 @@ from models.news_article import NewsArticle
 class TestNewsArticle:
     """Test class for NewsArticle model."""
 
-    def test__create_news_article__fields_have_given_values(self, create_news_article: NewsArticle):
+    def test__create_news_article__fields_have_given_values(
+        self, create_news_article: NewsArticle
+    ):
         """Test that NewsArticle is created correctly."""
         article = create_news_article
         assert article.title == "title"
@@ -15,7 +17,9 @@ class TestNewsArticle:
         assert article.url == "some_url"
         assert article.ticker == "TCK1"
 
-    def test__to_dict_news_article__dict_returned_with_given_values(self, create_news_article: NewsArticle):
+    def test__to_dict_news_article__dict_returned_with_given_values(
+        self, create_news_article: NewsArticle
+    ):
         """Test that to_dict returns correct dictionary."""
 
         article = create_news_article

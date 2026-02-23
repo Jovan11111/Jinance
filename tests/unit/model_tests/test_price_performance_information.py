@@ -4,7 +4,9 @@ from models.price_performance_information import PricePerformanceInformation
 class TestPricePerformanceInformation:
     """Test class for PricePerformanceInformation model."""
 
-    def test__create_price_performance_information__fields_have_given_values(self, create_price_perf: PricePerformanceInformation):
+    def test__create_price_performance_information__fields_have_given_values(
+        self, create_price_perf: PricePerformanceInformation
+    ):
         """Test that PricePerformanceInformation is created correctly."""
         price_info = create_price_perf
         assert price_info.ticker == "TCK1"
