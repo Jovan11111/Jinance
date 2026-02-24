@@ -10,42 +10,6 @@ from providers.yahoo.yahoo_earnings_provider import YahooEarningsProvider
 from utils import constants
 
 
-@pytest.fixture
-def create_earnings_info() -> list[EarningsInformation]:
-    earnings_information: list[EarningsInformation] = []
-    base = datetime.now()
-    for i in range(12):
-        days = 15 - i
-        dt = base + timedelta(days=days)
-        idx = i + 1
-        earnings_information.append(
-            EarningsInformation(
-                f"TCK{idx}",
-                f"company{idx}",
-                [],
-                123456,
-                EpsInformation(1, 2, 3),
-                dt,
-                321,
-                [],
-            )
-        )
-    return earnings_information
-
-
-@pytest.fixture
-def mock_yahoo_earnings_provider(monkeypatch, create_earnings_info):
-    mock_instance = MagicMock()
-    mock_instance.fetch_earnings.return_value = create_earnings_info
-
-    monkeypatch.setattr(
-        "managers.earnings_manager.YahooEarningsProvider",
-        lambda *args, **kwargs: mock_instance,
-    )
-
-    return mock_instance
-
-
 class TestEarningsManager:
     """Test class for Earnigns manager tests."""
 

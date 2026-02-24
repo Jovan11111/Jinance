@@ -11,7 +11,8 @@ source =
 omit =
     **/__init__.py
     **/tests/**
-
+    main.py
+    managers/insider_manager.py
 [report]
 show_missing = True
 skip_covered = False

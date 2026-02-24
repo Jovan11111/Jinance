@@ -9,43 +9,6 @@ from providers.yahoo.yahoo_news_provider import YahooNewsProvider
 from utils import constants
 
 
-@pytest.fixture
-def create_news_info() -> list[NewsArticle]:
-    """Create a list of 15 news articles"""
-    return [
-        NewsArticle(
-            f"Title {i}",
-            f"Summary {i}",
-            datetime(2026, 4, 9),
-            f"http://example.com/article{i}",
-            f"TCK{i%5}",
-        )
-        for i in range(15)
-    ]
-
-
-@pytest.fixture
-def mock_yahoo_news_provider(monkeypatch, create_news_info):
-    mock_instance = MagicMock()
-    mock_instance.fetch_news.return_value = create_news_info
-    monkeypatch.setattr(
-        "managers.news_manager.YahooNewsProvider",
-        lambda *args, **kwargs: mock_instance,
-    )
-    return mock_instance
-
-
-@pytest.fixture(autouse=True)
-def mock_yahoo_news_filter(monkeypatch, create_news_info):
-    mock_instance = MagicMock()
-    mock_instance.filter_news.return_value = create_news_info[:5]
-    monkeypatch.setattr(
-        "managers.news_manager.NewsFilter",
-        lambda *args, **kwargs: mock_instance,
-    )
-    return mock_instance
-
-
 class TestNewsManager:
     """Test class for News manager tests."""
 

@@ -7,9 +7,7 @@ from providers.yahoo.yahoo_price_performance_provider import (
 )
 
 
-@pytest.fixture
-def mock_yf_ticker(mocker):
-    return mocker.patch("providers.yahoo.yahoo_price_performance_provider.yf.Ticker")
+
 
 
 class TestPricePerformanceProvider:

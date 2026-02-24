@@ -6,9 +6,7 @@ import pytest
 from providers.yahoo.yahoo_news_provider import YahooNewsProvider
 
 
-@pytest.fixture
-def mock_yf_ticker(mocker):
-    return mocker.patch("providers.yahoo.yahoo_news_provider.yf.Ticker")
+
 
 
 class TestYahooNewsProvider:

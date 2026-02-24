@@ -71,3 +71,15 @@ def fixture_create_report_info(
     pp1 = create_price_perf
     pp2 = create_price_perf
     return ReportInformation([ei1, ei2], [na1, na2], [pp1, pp2])
+
+@pytest.fixture
+def mock_yf_ticker(mocker):
+    return mocker.patch("providers.yahoo.yahoo_news_provider.yf.Ticker")
+
+@pytest.fixture
+def mock_yf_ticker(mocker):
+    return mocker.patch("providers.yahoo.yahoo_news_provider.yf.Ticker")
+
+@pytest.fixture
+def mock_yf_ticker(mocker):
+    return mocker.patch("providers.yahoo.yahoo_price_performance_provider.yf.Ticker")
