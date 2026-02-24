@@ -1,12 +1,7 @@
 from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
-import pytest
-
 from providers.yahoo.yahoo_news_provider import YahooNewsProvider
-
-
-
 
 
 class TestYahooNewsProvider:
@@ -18,7 +13,7 @@ class TestYahooNewsProvider:
         assert provider._news_limit(5) == 1000
         assert provider._news_limit(10) == 1000
 
-    def test__fetch_news_multiple_tickers__returns_all_news(self, mock_yf_ticker):
+    def test__fetch_news_multiple_tickers__returns_all_news(self, mock_yf_ticker_news):
         mock_stock_1 = MagicMock()
         mock_stock_2 = MagicMock()
         mock_stock_3 = MagicMock()
@@ -84,7 +79,7 @@ class TestYahooNewsProvider:
             mapping = {"TCK1": mock_stock_1, "TCK2": mock_stock_2, "TCK3": mock_stock_3}
             return mapping[ticker]
 
-        mock_yf_ticker.side_effect = ticker_side_effect
+        mock_yf_ticker_news.side_effect = ticker_side_effect
 
         provider = YahooNewsProvider()
         result = provider.fetch_news(["TCK1", "TCK2", "TCK3"], days_behind=3)
@@ -120,7 +115,7 @@ class TestYahooNewsProvider:
         assert result[5].pub_time == datetime(2025, 8, 30, 12, 0, tzinfo=timezone.utc)
         assert result[5].url == "http://news6.com"
 
-    def test__fetch_news_no_content__skips_article(self, mock_yf_ticker):
+    def test__fetch_news_no_content__skips_article(self, mock_yf_ticker_news):
         mock_stock = MagicMock()
         mock_stock.get_news.return_value = [
             {
@@ -133,7 +128,7 @@ class TestYahooNewsProvider:
             },
             {},
         ]
-        mock_yf_ticker.return_value = mock_stock
+        mock_yf_ticker_news.return_value = mock_stock
 
         provider = YahooNewsProvider()
         result = provider.fetch_news(["TCK1"], days_behind=1)
@@ -144,19 +139,19 @@ class TestYahooNewsProvider:
         assert result[0].pub_time == datetime(2025, 9, 4, 12, 0, tzinfo=timezone.utc)
         assert result[0].url == "http://news1.com"
 
-    def test__fetch_news_no_articles__returns_empty_list(self, mock_yf_ticker):
+    def test__fetch_news_no_articles__returns_empty_list(self, mock_yf_ticker_news):
         mock_stock = MagicMock()
         mock_stock.get_news.return_value = []
-        mock_yf_ticker.return_value = mock_stock
+        mock_yf_ticker_news.return_value = mock_stock
 
         provider = YahooNewsProvider()
         result = provider.fetch_news(["TCK1"], days_behind=1)
         assert result == []
 
-    def test__fetch_news_empty_content_fields__empty_article(self, mock_yf_ticker):
+    def test__fetch_news_empty_content_fields__empty_article(self, mock_yf_ticker_news):
         mock_stock = MagicMock()
         mock_stock.get_news.return_value = [{"content": {"random_stuff": 123}}]
-        mock_yf_ticker.return_value = mock_stock
+        mock_yf_ticker_news.return_value = mock_stock
 
         provider = YahooNewsProvider()
         result = provider.fetch_news(["TCK1"], days_behind=1)

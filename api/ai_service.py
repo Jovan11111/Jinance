@@ -43,12 +43,12 @@ class AiService(metaclass=SingletonMeta):
             list[NewsArticle]: list of articles most likely to affect the market
         """
         logger.debug("Filtering news articles using AI service.")
-        prompt = self._build_prompt(news, top_k)
+        prompt, summary_map = self._build_prompt(news, top_k)
         response = self._call_groq(prompt)
 
-        return self._parse_response(response)
+        return self._parse_response(response, summary_map)
 
-    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
+    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> tuple[str, dict]:
         """Builds the prompt sent to the AI model.
 
         Args:
@@ -56,18 +56,27 @@ class AiService(metaclass=SingletonMeta):
             top_k (int): Number of news that are left after filtering
 
         Returns:
-            str: Promt string that is to be sent to the AI model
+            tuple[str, dict]: Prompt string and dict mapping (url) -> summary
         """
         logger.debug("Building prompt for AI model.")
-        news_dicts = [article.to_dict() for article in news]
-        return f"""
+        # Create a mapping of url -> summary to restore later
+        summary_map = {article.url: article.summary for article in news}
+
+        # Create dicts without summary to reduce payload size
+        news_dicts = []
+        for article in news:
+            d = article.to_dict()
+            # Remove summary to reduce payload size
+            d.pop("summary", None)
+            news_dicts.append(d)
+
+        prompt = f"""
 You are a financial markets AI.
 
 You will receive a list of recent financial news articles.
 Each article has:
 - pubTime
 - title
-- summary
 - url
 - ticker
 
@@ -76,7 +85,7 @@ Select the {top_k} articles that are MOST LIKELY to significantly impact stock p
 
 Return ONLY a JSON array of article objects.
 Each object MUST contain exactly:
-pubTime, title, summary, url, ticker
+pubTime, title, url, ticker
 
 DO NOT add explanations.
 DO NOT add extra fields.
@@ -85,6 +94,8 @@ DO NOT return text outside JSON.
 Articles:
 {json.dumps(news_dicts, indent=2, default=str)}
 """.strip()
+
+        return prompt, summary_map
 
     def _call_groq(self, prompt: str) -> str:
         """Sends a request to an AI model
@@ -117,11 +128,12 @@ Articles:
 
         return response.json()["choices"][0]["message"]["content"]
 
-    def _parse_response(self, response: str) -> list[NewsArticle]:
+    def _parse_response(self, response: str, summary_map: dict) -> list[NewsArticle]:
         """Since AI doesn't know about internal data classes, parses the response to a list of NewsArticles
 
         Args:
             response (str): Response string from the AI model
+            summary_map (dict): Mapping of url -> summary to restore original summaries
 
         Raises:
             ValueError: Raised when the response is not valid JSON or doesn't match expected format
@@ -148,12 +160,16 @@ Articles:
                 if isinstance(pub_time, str):
                     pub_time = datetime.fromisoformat(pub_time.replace("Z", "+00:00"))
 
+                # Restore the original summary from the mapping
+                url = item.get("url")
+                original_summary = summary_map.get(url, "")
+
                 articles.append(
                     NewsArticle(
                         title=item.get("title", ""),
-                        summary=item.get("summary", ""),
+                        summary=original_summary,
                         pub_time=pub_time,
-                        url=item.get("url"),
+                        url=url,
                         ticker=item.get("ticker", ""),
                     )
                 )

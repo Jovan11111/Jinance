@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 class PricePerformanceManager:
     """Class that manages price performance for companies."""
 
-    def __init__(self, provider: str = "yahoo", days_ahead=180, tickers=constants.TICKERS_SP_100):
+    def __init__(
+        self, provider: str = "yahoo", days_ahead=180, tickers=constants.TICKERS_SP_100
+    ):
         logger.debug("PricePerformanceManager initialized.")
         self._days_ahead = days_ahead if days_ahead > 0 else 180
         self._tickers: list[str] = tickers
@@ -50,7 +52,9 @@ class PricePerformanceManager:
             Dict[str, list[PricePerformanceInformation]]: Keys: winners, losers, values are lists performances tied to tickers.
         """
         if number_of_companies < 1:
-            logger.warning("Insufficient number of companies for price performance, setting the value to default...")
+            logger.warning(
+                "Insufficient number of companies for price performance, setting the value to default..."
+            )
             number_of_companies = 3
         logger.debug(
             f"Fetching best and worst price performance for {number_of_companies} companies."

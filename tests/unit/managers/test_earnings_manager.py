@@ -1,11 +1,4 @@
-from datetime import datetime, timedelta
-from unittest.mock import MagicMock
-
-import pytest
-
 from managers.earnings_manager import EarningsManager
-from models.earnings_information import EarningsInformation
-from models.eps_information import EpsInformation
 from providers.yahoo.yahoo_earnings_provider import YahooEarningsProvider
 from utils import constants
 

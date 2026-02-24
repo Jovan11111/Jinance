@@ -1,17 +1,14 @@
 from unittest.mock import MagicMock
 
-import pytest
-
 from providers.yahoo.yahoo_price_performance_provider import (
     YahooPricePerformanceProvider,
 )
 
 
-
-
-
 class TestPricePerformanceProvider:
-    def test_fetch_price_performance__multiple_tickers(self, mock_yf_ticker):
+    def test_fetch_price_performance__multiple_tickers(
+        self, mock_yf_ticker_price_performance
+    ):
         mock_stock_1 = MagicMock()
         mock_stock_2 = MagicMock()
         mock_stock_3 = MagicMock()
@@ -30,7 +27,7 @@ class TestPricePerformanceProvider:
             mapping = {"TCK1": mock_stock_1, "TCK2": mock_stock_2, "TCK3": mock_stock_3}
             return mapping[ticker]
 
-        mock_yf_ticker.side_effect = ticker_side_effect
+        mock_yf_ticker_price_performance.side_effect = ticker_side_effect
 
         provider = YahooPricePerformanceProvider()
         result = provider.fetch_price_performance(
@@ -46,7 +43,7 @@ class TestPricePerformanceProvider:
         assert result[2].prices == [50.321, 52.517, 54.037]
 
     def test_fetch_price_performance__empty_history_returns_empty_list(
-        self, mock_yf_ticker
+        self, mock_yf_ticker_price_performance
     ):
         mock_stock = MagicMock()
 
@@ -54,7 +51,7 @@ class TestPricePerformanceProvider:
         mock_hist.empty = True
         mock_stock.history.return_value = mock_hist
 
-        mock_yf_ticker.return_value = mock_stock
+        mock_yf_ticker_price_performance.return_value = mock_stock
 
         provider = YahooPricePerformanceProvider()
         result = provider.fetch_price_performance(["TCK1"], days_behind=10)
@@ -62,9 +59,9 @@ class TestPricePerformanceProvider:
         assert result == []
 
     def test_fetch_price_performance__yahoo_exception_skips_ticker(
-        self, mock_yf_ticker
+        self, mock_yf_ticker_price_performance
     ):
-        mock_yf_ticker.side_effect = Exception("Yahoo API error")
+        mock_yf_ticker_price_performance.side_effect = Exception("Yahoo API error")
 
         provider = YahooPricePerformanceProvider()
         result = provider.fetch_price_performance(["TCK1"], days_behind=10)

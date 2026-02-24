@@ -1,10 +1,6 @@
-from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock
 
-import pytest
-
 from filters.news_filter import NewsFilter
-from models.news_article import NewsArticle
 
 
 class TestNewsFilter:

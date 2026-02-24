@@ -1,10 +1,4 @@
-from datetime import datetime
-from unittest.mock import MagicMock
-
-import pytest
-
 from managers.news_manager import NewsManager
-from models.news_article import NewsArticle
 from providers.yahoo.yahoo_news_provider import YahooNewsProvider
 from utils import constants
 
