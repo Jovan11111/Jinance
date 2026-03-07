@@ -90,6 +90,7 @@ pubTime, title, url, ticker
 DO NOT add explanations.
 DO NOT add extra fields.
 DO NOT return text outside JSON.
+Return ONLY {top_k} most impactfull articls.
 
 Articles:
 {json.dumps(news_dicts, indent=2, default=str)}

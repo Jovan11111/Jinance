@@ -5,16 +5,19 @@ from datetime import datetime
 
 import matplotlib.pyplot as plt
 
+from utils.localization import Localization
+
 logger = logging.getLogger(__name__)
 
 
 class GraphBuilder:
     """Class responsible for creatings graphs that are represented in a report by using matplotlib library."""
 
-    def __init__(self, output_dir="graphs"):
+    def __init__(self, localization: Localization, output_dir="graphs"):
         logger.debug("GraphBuilder initialized.")
         self.output_dir = output_dir
         self._clear_graph_folder()
+        self.localization = localization
 
     def _clear_graph_folder(self):
         """Deletes old graphs."""
@@ -66,8 +69,8 @@ class GraphBuilder:
         margin = (max_p - min_p) * 0.1 or max(1.0, abs(max_p) * 0.01)
         plt.ylim(min_p - margin, max_p + margin)
 
-        plt.xlabel("Dani")
-        plt.ylabel("Cena (USD)")
+        plt.xlabel(f"{self.localization.translate("graph_days")}")
+        plt.ylabel(f"{self.localization.translate("graph_price")}")
         plt.grid(True)
 
         path = os.path.join(

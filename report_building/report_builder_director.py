@@ -12,6 +12,8 @@ from models.price_performance_information import PricePerformanceInformation
 from report_building.earnings_buidler import EarningsBuilder
 from report_building.news_builder import NewsBuilder
 from report_building.price_performance_builder import PricePerformanceBuilder
+from utils.enums.language import Language
+from utils.localization import Localization
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +21,12 @@ logger = logging.getLogger(__name__)
 class ReportBuilderDirector:
     """Class responsible for putting together the whole report and converting it into PDF."""
 
-    def __init__(
-        self,
-    ):
+    def __init__(self, language: Language = Language.SERBIAN):
         logger.debug("ReportBuilderDirector initialized.")
-        self._earnings_builder = EarningsBuilder()
-        self._news_builder = NewsBuilder()
-        self._price_performance_builder = PricePerformanceBuilder()
+        self.localization = Localization(language)
+        self._earnings_builder = EarningsBuilder(self.localization)
+        self._news_builder = NewsBuilder(self.localization)
+        self._price_performance_builder = PricePerformanceBuilder(self.localization)
 
     @property
     def earnings_builder(self) -> EarningsBuilder:
@@ -53,7 +54,7 @@ class ReportBuilderDirector:
         today = date.today().strftime("%d.%m.%Y")
 
         md = []
-        md.append(f"# Izveštaj za {today}")
+        md.append(f"# {self.localization.translate("report_title")} {today}")
         md.append(self.earnings_builder.build_markdown(earnings_data))
         md.append(self.news_builder.build_markdown(news_data))
         md.append(self.price_performance_builder.build_markdown(price_performance_data))
