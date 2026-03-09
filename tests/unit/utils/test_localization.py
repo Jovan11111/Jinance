@@ -3,7 +3,7 @@ from utils.localization import Localization
 
 
 class TestLocalization:
-    """Class for test for localizatio class"""
+    """Class for test for localization class"""
 
     def test__serbian__translates_to_serbian(self):
         """Check if Localization class correctly translates to Serbian"""

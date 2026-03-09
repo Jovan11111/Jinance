@@ -20,7 +20,7 @@ class TestEarningsInformation:
         assert ei.revenue == 1234567
         assert ei.previous_earnings == []
 
-    def test__to_dictearnings_information__dict_returned_with_given_values(
+    def test__to_dict_earnings_information__dict_returned_with_given_values(
         self, create_eps_info: EpsInformation, create_earn_info: EarningsInformation
     ):
         """Test that to_dict returns correct dictionary."""

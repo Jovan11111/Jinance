@@ -22,13 +22,13 @@ class EarningsBuilder(ReportBuilder):
         return self._graph_builder
 
     def build_markdown(self, earnings_data: list[EarningsInformation]) -> str:
-        """Returns .md formated report part that includes all given upcoming earnings information.
+        """Returns .md formatted report part that includes all given upcoming earnings information.
 
         Args:
             earnings_data (list[EarningsInformation]): Information about upcoming earnings that needs to be represented.
 
         Returns:
-            str: String that contains all information in a formated way.
+            str: String that contains all information in a formatted way.
         """
         logger.debug("Building earnings markdown report part.")
         md = []

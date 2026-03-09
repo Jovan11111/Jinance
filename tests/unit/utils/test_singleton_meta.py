@@ -4,7 +4,7 @@ from utils.singleton_meta import SingletonMeta
 class TestSingleton:
     """Test class for SingletonMeta metaclass."""
 
-    def test__create_2_singeltons__they_are_the_same(self):
+    def test__create_2_singletons__they_are_the_same(self):
         """Test that only one instance is created."""
 
         class TestClass(metaclass=SingletonMeta):
@@ -18,7 +18,7 @@ class TestSingleton:
         assert instance2 is instance1
         assert instance2.value == 67
 
-    def test__create_2_singeltons_get_instance__they_are_the_same(self):
+    def test__create_2_singletons_get_instance__they_are_the_same(self):
         """Test the get_instance class method."""
 
         class TestClass(metaclass=SingletonMeta):

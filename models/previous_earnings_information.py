@@ -1,5 +1,5 @@
 class PreviousEarningsInformation:
-    """Class that represents releavnt information about previos earnings report."""
+    """Class that represents relevant information about previous earnings report."""
 
     def __init__(self, expected_eps: float, actual_eps: float, price_diff: float):
         self._expected_eps = expected_eps

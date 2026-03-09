@@ -4,17 +4,17 @@ from utils import constants
 
 
 class TestEarningsManager:
-    """Test class for Earnigns manager tests."""
+    """Test class for Earnings manager tests."""
 
     def test__initialize_earnings_manager__all_fields_correct(self):
-        """Check if initializiting manager with reasonable values creates Earnings manager correctly."""
+        """Check if initializing manager with reasonable values creates Earnings manager correctly."""
         earnings_manager = EarningsManager("yahoo", 25, constants.TICKERS_SP_20)
 
         assert earnings_manager.days_ahead == 25
         assert earnings_manager.tickers == constants.TICKERS_SP_20
         assert isinstance(earnings_manager.provider, YahooEarningsProvider)
 
-    def test__initalize_earnings_manager_negative_days_ahead__initialized_with_default_days_ahead_value(
+    def test__initialize_earnings_manager_negative_days_ahead__initialized_with_default_days_ahead_value(
         self,
     ):
         """Check if Earnings manager will be initialized with default values for days_ahead if given value makes no sense."""
@@ -27,18 +27,18 @@ class TestEarningsManager:
     def test__initialize_earnings_manager_default_values__initializes_with_default_values(
         self,
     ):
-        """Check if Earnigns Manager will be initialized with default values if no other are given."""
+        """Check if Earnings Manager will be initialized with default values if no other are given."""
         earnings_manager = EarningsManager()
 
         assert earnings_manager.days_ahead == 30
         assert earnings_manager.tickers == constants.TICKERS_SP_100
         assert isinstance(earnings_manager.provider, YahooEarningsProvider)
 
-    def test__initialize_earnings_manager_non_existant_provider__initizes_with_default_value(
+    def test__initialize_earnings_manager_non_existent_provider__initializes_with_default_value(
         self,
     ):
-        """Check if Earnings Manager will be initialized with default values if non existant provider name is given."""
-        earnings_manager = EarningsManager("NON_EXISTANT", 30, constants.TICKERS_SP_10)
+        """Check if Earnings Manager will be initialized with default values if non existent provider name is given."""
+        earnings_manager = EarningsManager("NON_EXISTENT", 30, constants.TICKERS_SP_10)
 
         assert earnings_manager.days_ahead == 30
         assert earnings_manager.tickers == constants.TICKERS_SP_10

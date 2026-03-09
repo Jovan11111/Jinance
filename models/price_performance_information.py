@@ -17,7 +17,7 @@ class PricePerformanceInformation:
 
     @property
     def percent_change(self) -> float:
-        """Calculate the percent change from the first to the last price, so the difference from beggining to end."""
+        """Calculate the percent change from the first to the last price, so the difference from beginning to end."""
         if not self._prices or len(self._prices) < 2:
             return 0.0
         return round(((self._prices[-1] - self._prices[0]) / self._prices[0]) * 100, 2)

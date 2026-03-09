@@ -12,19 +12,19 @@ logger = logging.getLogger(__name__)
 
 
 class YahooEarningsProvider(EarningsProvider):
-    """Class that is responsible for providing Earnigns information by using yahoo finance API."""
+    """Class that is responsible for providing Earnings information by using yahoo finance API."""
 
     def fetch_earnings(
         self, tickers: list[str], cutoff: datetime
     ) -> list[EarningsInformation]:
-        """Return relevant Earnings report informtion for given companies.
+        """Return relevant Earnings report information for given companies.
 
         Args:
             tickers (list[str]): List of ticker for which to check if there is an upcoming earnings report.
             cutoff (datetime): How far into the future a report can't be to be included.
 
         Returns:
-            list[EarningsInformation]: List of relevant earnings report inforation for given companies.
+            list[EarningsInformation]: List of relevant earnings report information for given companies.
         """
         logger.debug(
             f"Fetching all earnings information until the {cutoff} using Yahoo Finance API."
@@ -68,7 +68,7 @@ class YahooEarningsProvider(EarningsProvider):
         return result
 
     def _get_stock_calendar(self, stock: yf.Ticker) -> dict | None:
-        """Get the stock calendar that conatins all usefull information."""
+        """Get the stock calendar that contains all useful information."""
         try:
             calendar = stock.calendar
             return calendar
@@ -79,7 +79,7 @@ class YahooEarningsProvider(EarningsProvider):
     def _get_earnings_date(self, calendar: dict, cutoff: datetime) -> datetime | None:
         """Get the date of the first upcoming earnings report for a company.
 
-        Returs a date only if it is sooner that cutoff time."""
+        Returns a date only if it is sooner that cutoff time."""
         try:
             earnings_date = calendar.get("Earnings Date", None)[0]
             if earnings_date is None or not (

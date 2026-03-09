@@ -36,12 +36,12 @@ class TestPricePerformanceManager:
         assert pp_manager.tickers == constants.TICKERS_SP_100
         assert isinstance(pp_manager.provider, YahooPricePerformanceProvider)
 
-    def test__initialize_pp_manager_non_existant_provider__initialized_with_default_provider(
+    def test__initialize_pp_manager_non_existent_provider__initialized_with_default_provider(
         self,
     ):
         """Check if PP manager is initialized with default provider, if a fake provider is given."""
         pp_manager = PricePerformanceManager(
-            "NON_EXISTANT", 456, constants.TICKERS_SP_10
+            "NON_EXISTENT", 456, constants.TICKERS_SP_10
         )
 
         assert pp_manager.days_ahead == 456
@@ -76,7 +76,7 @@ class TestPricePerformanceManager:
     def test__get_price_performance_negative_number_of_companies__sets_number_of_companies_to_3(
         self, mock_yahoo_price_performance_provider
     ):
-        """Check if get_worst_best_price_performance works correclly even with bad user input."""
+        """Check if get_worst_best_price_performance works correctly even with bad user input."""
         pp_manager = PricePerformanceManager()
         result = pp_manager.get_best_worst_price_performance(-4)
         assert len(result["winners"]) == 3

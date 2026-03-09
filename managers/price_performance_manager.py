@@ -22,7 +22,7 @@ class PricePerformanceManager:
         if provider == "yahoo":
             self._provider = YahooPricePerformanceProvider()
         else:
-            logger.warning("Chose a non existant provider, using a default one...")
+            logger.warning("Chose a non existent provider, using a default one...")
             self._provider = YahooPricePerformanceProvider()
 
     @property

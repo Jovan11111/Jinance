@@ -10,7 +10,7 @@ from models.earnings_information import EarningsInformation
 from models.insider_information import InsiderInformation
 from models.news_article import NewsArticle
 from models.price_performance_information import PricePerformanceInformation
-from report_building.earnings_buidler import EarningsBuilder
+from report_building.earnings_builder import EarningsBuilder
 from report_building.insider_builder import InsiderBuilder
 from report_building.news_builder import NewsBuilder
 from report_building.price_performance_builder import PricePerformanceBuilder
@@ -38,7 +38,7 @@ class ReportBuilderDirector:
 
     @property
     def news_builder(self) -> NewsBuilder:
-        """Getter for news buidler that is being used."""
+        """Getter for news builder that is being used."""
         return self._news_builder
 
     @property

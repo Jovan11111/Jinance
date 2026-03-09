@@ -32,7 +32,7 @@ class ReportInformation:
         return self._price_performance_information
 
     def to_dict(self) -> dict:
-        """Convert the ReportInformation object to dicttionary."""
+        """Convert the ReportInformation object to dictionary."""
         return {
             "earnings_information": [
                 earn.to_dict() for earn in self.earnings_information

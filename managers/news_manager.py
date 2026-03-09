@@ -24,7 +24,7 @@ class NewsManager:
             self.provider = YahooNewsProvider()
         else:
             logger.warning(
-                "Chose a non existant provider, initializing a default one..."
+                "Chose a non existent provider, initializing a default one..."
             )
             self.provider = YahooNewsProvider()
         self.filter = NewsFilter()

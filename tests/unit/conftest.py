@@ -80,7 +80,7 @@ def fixture_create_report_info(
 
 
 # --------------------------------------------------------------------------------------
-# Fixtures for creatings lists of objects.
+# Fixtures for creating lists of objects.
 # --------------------------------------------------------------------------------------
 
 

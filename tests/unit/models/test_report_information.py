@@ -7,7 +7,7 @@ from models.report_information import ReportInformation
 class TestReportInformation:
     """Test class for ReportInformation model."""
 
-    def test__create__report_infromation__fields_have_given_values(
+    def test__create__report_information__fields_have_given_values(
         self,
         create_report_info: ReportInformation,
         create_earn_info: EarningsInformation,

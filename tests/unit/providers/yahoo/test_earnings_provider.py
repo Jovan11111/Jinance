@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, PropertyMock
 from providers.yahoo.yahoo_earnings_provider import YahooEarningsProvider
 
 
-class TestEearningsProvider:
+class TestEarningsProvider:
     def test__fetch_earnings_multiple_tickers__return_earnings_list(
         self, mock_yf_ticker_earnings, yf_stock_factory
     ):
@@ -127,7 +127,7 @@ class TestEearningsProvider:
 
         assert result == []
 
-    def test__fetch_earnings_info_exception__market_cap_company_nameempty(
+    def test__fetch_earnings_info_exception__market_cap_company_name_empty(
         self, mock_yf_ticker_earnings, yf_stock_factory
     ):
         cutoff = (datetime.now() + timedelta(days=30)).date()

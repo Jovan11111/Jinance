@@ -1,2 +1,2 @@
 class TestEarningsBuilder:
-    """test class for earnings_buidler unit tests."""
+    """test class for earnings_builder unit tests."""

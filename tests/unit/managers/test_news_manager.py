@@ -7,14 +7,14 @@ class TestNewsManager:
     """Test class for News manager tests."""
 
     def test__initialize_news_manager__all_fields_correct(self):
-        """Check if initializiting manager with reasonable values creates News manager correctly."""
+        """Check if initializing manager with reasonable values creates News manager correctly."""
         news_manager = NewsManager("yahoo", 5, constants.TICKERS_SP_20)
 
         assert news_manager.days_behind == 5
         assert news_manager.tickers == constants.TICKERS_SP_20
         assert isinstance(news_manager.provider, YahooNewsProvider)
 
-    def test__initialize_news_manager_negative_days_behind__initialized_with_default_days_begind(
+    def test__initialize_news_manager_negative_days_behind__initialized_with_default_days_behind(
         self,
     ):
         """Check if initializing manager with negative days_behind initializes it with default value."""
@@ -34,11 +34,11 @@ class TestNewsManager:
         assert news_manager.tickers == constants.TICKERS_SP_100
         assert isinstance(news_manager.provider, YahooNewsProvider)
 
-    def test__initialize_news_manager_non_existant_provider__initialized_with_default_provider(
+    def test__initialize_news_manager_non_existent_provider__initialized_with_default_provider(
         self,
     ):
-        """Check if initializing manager with non existant provider initializes it with default provider."""
-        news_manager = NewsManager("NON_EXISTANT", 1, constants.TICKERS_SP_50)
+        """Check if initializing manager with non existent provider initializes it with default provider."""
+        news_manager = NewsManager("NON_EXISTENT", 1, constants.TICKERS_SP_50)
 
         assert news_manager.days_behind == 1
         assert news_manager.tickers == constants.TICKERS_SP_50

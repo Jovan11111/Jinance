@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class GraphBuilder:
-    """Class responsible for creatings graphs that are represented in a report by using matplotlib library."""
+    """Class responsible for creating graphs that are represented in a report by using matplotlib library."""
 
     def __init__(self, localization: Localization, output_dir="graphs"):
         logger.debug("GraphBuilder initialized.")

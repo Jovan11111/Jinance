@@ -24,7 +24,7 @@ class NewsFilter:
     def filter_news(
         self, raw_news: list[NewsArticle], top_k: int, days_behind: int
     ) -> list[NewsArticle]:
-        """Main mathod that filters all news articles on various criteria.
+        """Main method that filters all news articles on various criteria.
 
         Args:
             raw_news (list[NewsArticle]): all provided news articles

@@ -8,20 +8,20 @@ logger = logging.getLogger(__name__)
 
 
 class NewsBuilder(ReportBuilder):
-    """Class responsible for building the part of the report that conatins relevant news information in a .md format."""
+    """Class responsible for building the part of the report that contains relevant news information in a .md format."""
 
     def __init__(self, localization: Localization):
         logger.debug("NewsBuilder initialized.")
         self.localization = localization
 
     def build_markdown(self, news_data: list[NewsArticle]) -> str:
-        """Returns .md formated report part that includes all given news information.
+        """Returns .md formatted report part that includes all given news information.
 
         Args:
             news_data (list[NewsArticle]): Information about relevant news articles that needs to be represented.
 
         Returns:
-            str: String that contains all information in a formated way.
+            str: String that contains all information in a formatted way.
         """
         logger.debug("Building news markdown report part.")
         md: list[str] = []

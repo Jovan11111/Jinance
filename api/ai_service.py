@@ -33,7 +33,7 @@ class AiService(metaclass=SingletonMeta):
     def filter_news(
         self, news: list[NewsArticle], top_k: int = 10
     ) -> list[NewsArticle]:
-        """Filteres a list of news, and returns only those that could affect the market the most.
+        """Filters a list of news, and returns only those that could affect the market the most.
 
         Args:
             news (list[NewsArticle]): list of all news articles to filter
@@ -90,7 +90,7 @@ pubTime, title, url, ticker
 DO NOT add explanations.
 DO NOT add extra fields.
 DO NOT return text outside JSON.
-Return ONLY {top_k} most impactfull articls.
+Return ONLY {top_k} most impactful articles.
 
 Articles:
 {json.dumps(news_dicts, indent=2, default=str)}
@@ -102,7 +102,7 @@ Articles:
         """Sends a request to an AI model
 
         Args:
-            prompt (str): Promt to be sent
+            prompt (str): Prompt to be sent
 
         Returns:
             str: Response from the AI model

@@ -18,14 +18,14 @@ class EarningsManager:
         days_ahead: int = 30,
         tickers=constants.TICKERS_SP_100,
     ):
-        logger.debug("EarnigsManager initialized.")
+        logger.debug("EaringsManager initialized.")
         self._days_ahead = days_ahead if days_ahead > 0 else 30
         self._tickers: list[str] = tickers
         if provider == "yahoo":
             self._provider: EarningsProvider = YahooEarningsProvider()
         else:
             logger.warning(
-                "Chose a non existant provider, initializing a default one..."
+                "Chose a non existent provider, initializing a default one..."
             )
             self._provider: EarningsProvider = YahooEarningsProvider()
 
