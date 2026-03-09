@@ -2,6 +2,7 @@ import logging
 from typing import Dict
 
 from managers.earnings_manager import EarningsManager
+from managers.insider_manager import InsiderManager
 from managers.news_manager import NewsManager
 from managers.price_performance_manager import PricePerformanceManager
 from models.earnings_information import EarningsInformation
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class Jinance(metaclass=SingletonMeta):
-    """Main facade class of the aplication that manages all data, sends it to report builders."""
+    """Main facade class of the application that manages all data, sends it to report builders."""
 
     def __init__(self):
         setup_logging()
@@ -24,6 +25,7 @@ class Jinance(metaclass=SingletonMeta):
         self._earnings_manager = EarningsManager("yahoo")
         self._news_manager = NewsManager("yahoo")
         self._price_performance_manager = PricePerformanceManager("yahoo")
+        self._insider_manager = InsiderManager("yahoo")
         self._report_builder = ReportBuilderDirector(Language.ENGLISH)
 
     def generate_report(self, number_of_companies: int = 5) -> str:
@@ -46,8 +48,10 @@ class Jinance(metaclass=SingletonMeta):
             self._price_performance_manager.get_best_worst_price_performance(3)
         )
 
+        insider_data = self._insider_manager.get_insider_trades(3)
+
         pdf_path = self._report_builder.create_pdf_report(
-            earnings_data, news_data, price_performance_data
+            earnings_data, news_data, price_performance_data, insider_data
         )
 
         return pdf_path

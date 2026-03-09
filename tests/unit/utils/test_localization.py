@@ -110,7 +110,7 @@ class TestLocalization:
         assert localization.translate("graph_days") == "Days"
         assert localization.translate("graph_price") == "Price (USD)"
 
-    def test__nonexistent_key_returns_empty_string(self):
+    def test__nonexistent_key__returns_empty_string(self):
         """Check if Localization returns empty string for nonexistent key"""
         localization_sr = Localization(Language.SERBIAN)
         localization_en = Localization(Language.ENGLISH)

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class YahooNewsProvider(NewsProvider):
-    """Class that provdes data about news articles by using yahoo finance API."""
+    """Class that provides data about news articles by using yahoo finance API."""
 
     def fetch_news(self, tickers: list[str], days_behind: int) -> list[NewsArticle]:
         """Get all news articles posted on yahoo finance in the last **days_behind** days.
