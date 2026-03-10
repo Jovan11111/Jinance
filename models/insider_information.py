@@ -1,19 +1,22 @@
+from datetime import datetime
+
+from utils.enums.trade_type import TradeType
+
+
 class InsiderInformation:
     """Class that represents information about insider trading that is in the report."""
 
     def __init__(
         self,
         ticker: str,
-        amount_bought: int,
-        amount_sold: int,
-        buyers: list[str],
-        sellers: list[str],
+        value: float,
+        type: TradeType,
+        date: datetime,
     ):
         self._ticker: str = ticker
-        self._amount_bought: int = amount_bought
-        self._amount_sold: int = amount_sold
-        self._buyers: list[str] = buyers
-        self._sellers: list[str] = sellers
+        self._value: float = value
+        self._type: TradeType = type
+        self._date: datetime = date
 
     @property
     def ticker(self) -> str:
@@ -21,31 +24,25 @@ class InsiderInformation:
         return self._ticker
 
     @property
-    def amount_bought(self) -> int:
-        """Getter for the amount bought in the insider trading information."""
-        return self._amount_bought
+    def value(self) -> float:
+        """Getter for the value of the insider trading information."""
+        return self._value
 
     @property
-    def amount_sold(self) -> int:
-        """Getter for the amount sold in the insider trading information."""
-        return self._amount_sold
+    def type(self) -> TradeType:
+        """Getter for the type of the insider trading information."""
+        return self._type
 
     @property
-    def buyers(self) -> list[str]:
-        """Getter for the list of buyers in the insider trading information."""
-        return self._buyers
-
-    @property
-    def sellers(self) -> list[str]:
-        """Getter for the list of sellers in the insider trading information."""
-        return self._sellers
+    def date(self) -> datetime:
+        """Getter for the date of the insider trading information."""
+        return self._date
 
     def to_dict(self) -> dict:
         """Convert InsiderInformation object to a dictionary."""
         return {
             "ticker": self.ticker,
-            "amount_bought": self.amount_bought,
-            "amount_sold": self.amount_sold,
-            "buyers": self.buyers,
-            "sellers": self.sellers,
+            "value": self._value,
+            "type": self._type,
+            "date": self.date.isoformat(),
         }

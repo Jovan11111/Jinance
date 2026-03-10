@@ -78,4 +78,5 @@ class PricePerformanceBuilder(ReportBuilder):
             )
             md.append(f"![Grafik performansi cene]({graph_path})\n")
 
+        md.append('<div class="page-break"></div>')
         return "\n".join(md)

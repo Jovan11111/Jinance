@@ -7,9 +7,7 @@ class InsiderProvider(ABC):
     """Interface used by all classes that provide Insider data."""
 
     @abstractmethod
-    def fetch_insider_trades(
-        self, tickers: list[str], days_behind: int
-    ) -> list[InsiderInformation]:
+    def fetch_insider_trades(self, tickers: list[str]) -> list[InsiderInformation]:
         """Return relevant insider trading data.
 
         Args:

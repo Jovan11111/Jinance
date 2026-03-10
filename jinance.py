@@ -48,7 +48,7 @@ class Jinance(metaclass=SingletonMeta):
             self._price_performance_manager.get_best_worst_price_performance(3)
         )
 
-        insider_data = self._insider_manager.get_insider_trades(3)
+        insider_data = self._insider_manager.get_insider_trades(5)
 
         pdf_path = self._report_builder.create_pdf_report(
             earnings_data, news_data, price_performance_data, insider_data

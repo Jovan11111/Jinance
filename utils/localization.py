@@ -113,6 +113,23 @@ class Localization:
                 Language.SERBIAN: "Najgore performanse cena akcija",
                 Language.ENGLISH: "Worst stock price performances",
             },
+            # Insider report builder localization
+            "insider_title": {
+                Language.SERBIAN: "Insider izveštaj",
+                Language.ENGLISH: "Insider trading report",
+            },
+            "insider_intro": {
+                Language.SERBIAN: "Pregled najvećih kupaca i prodavaca insajderskih transakcija.",
+                Language.ENGLISH: "Overview of the biggest insider buyers and sellers.",
+            },
+            "insider_buyers": {
+                Language.SERBIAN: "Najveći kupci",
+                Language.ENGLISH: "Top buyers",
+            },
+            "insider_sellers": {
+                Language.SERBIAN: "Najveći prodavci",
+                Language.ENGLISH: "Top sellers",
+            },
             # Graph builder localization
             "graph_days": {Language.SERBIAN: "Dani", Language.ENGLISH: "Days"},
             "graph_price": {

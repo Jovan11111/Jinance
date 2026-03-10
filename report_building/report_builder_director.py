@@ -6,8 +6,8 @@ from typing import Dict
 import markdown as md_pkg
 from weasyprint import HTML
 
+from models.aggregated_insider_info import AggregatedInsiderInfo
 from models.earnings_information import EarningsInformation
-from models.insider_information import InsiderInformation
 from models.news_article import NewsArticle
 from models.price_performance_information import PricePerformanceInformation
 from report_building.earnings_builder import EarningsBuilder
@@ -56,7 +56,7 @@ class ReportBuilderDirector:
         earnings_data: list[EarningsInformation],
         news_data: list[NewsArticle],
         price_performance_data: Dict[str, list[PricePerformanceInformation]],
-        insider_data: Dict[str, list[InsiderInformation]],
+        insider_data: Dict[str, list[AggregatedInsiderInfo]],
     ) -> str:
         """Creates a whole report in .md format by calling all other builders it contains."""
         logger.debug("Building markdown content for the report.")
@@ -75,7 +75,7 @@ class ReportBuilderDirector:
         earnings_data: list[EarningsInformation],
         news_data: list[NewsArticle],
         price_performance_data: Dict[str, list[PricePerformanceInformation]],
-        insider_data: Dict[str, list[InsiderInformation]],
+        insider_data: Dict[str, list[AggregatedInsiderInfo]],
     ) -> str:
         """Creates a pdf report that is a final produce of the whole application.
 

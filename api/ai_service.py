@@ -86,6 +86,7 @@ Select the {top_k} articles that are MOST LIKELY to significantly impact stock p
 Return ONLY a JSON array of article objects.
 Each object MUST contain exactly:
 pubTime, title, url, ticker
+DO NOT RETURN A JSON CODE BLOCK, ONLY THE RAW JSON.
 
 DO NOT add explanations.
 DO NOT add extra fields.
