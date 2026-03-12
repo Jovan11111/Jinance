@@ -18,7 +18,7 @@ class InsiderBuilder(ReportBuilder):
     def build_markdown(
         self, insider_data: Dict[str, list[AggregatedInsiderInfo]]
     ) -> str:
-        """Returns .md formatted report part that includes all given insider information.
+        """Return .md formatted report part that includes all given insider information.
 
         Args:
             insider_data (Dict[str, list[AggregatedInsiderInfo]]): Information about relevant insider transactions that needs to be represented.
@@ -34,7 +34,9 @@ class InsiderBuilder(ReportBuilder):
 
         sellers = insider_data["sellers"]
         md.append(f"### {self.localization.translate('insider_sellers')}\n")
-        md.append("| # | Ticker | Amount sold |")
+        md.append(
+            f"| # | {self.localization.translate("insider_ticker")} | {self.localization.translate("insider_amount_sold")} |"
+        )
         md.append("|---|--------|-------------|")
         for i, seller in enumerate(sellers, start=1):
             ticker = seller.ticker
@@ -45,7 +47,9 @@ class InsiderBuilder(ReportBuilder):
 
         buyers = insider_data["buyers"]
         md.append(f"### {self.localization.translate('insider_buyers')}\n")
-        md.append("| # | Ticker | Amount bought |")
+        md.append(
+            f"| # | {self.localization.translate("insider_ticker")} | {self.localization.translate("insider_amount_bought")} |"
+        )
         md.append("|---|--------|---------------|")
         for i, buyer in enumerate(buyers, start=1):
             ticker = buyer.ticker

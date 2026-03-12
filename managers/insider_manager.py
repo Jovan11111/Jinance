@@ -45,7 +45,7 @@ class InsiderManager:
     def get_insider_trades(
         self, number_of_companies: int
     ) -> Dict[str, list[AggregatedInsiderInfo]]:
-        """Returns list of biggest buyers and sellers for a specified number of companies.
+        """Return list of biggest buyers and sellers for a specified number of companies.
 
         Args:
             number_of_companies (int): Number of buyers and sellers to return.

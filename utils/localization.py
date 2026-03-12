@@ -130,6 +130,43 @@ class Localization:
                 Language.SERBIAN: "Najveći prodavci",
                 Language.ENGLISH: "Top sellers",
             },
+            "insider_ticker": {
+                Language.SERBIAN: "Tiker",
+                Language.ENGLISH: "Ticker",
+            },
+            "insider_amount_sold": {
+                Language.SERBIAN: "Iznos prodaje",
+                Language.ENGLISH: "Amount sold",
+            },
+            "insider_amount_bought": {
+                Language.SERBIAN: "Iznos kupovine",
+                Language.ENGLISH: "Amount bought",
+            },
+            # Analyst recommendations report builder localization
+            "analyst_title": {
+                Language.SERBIAN: "Preporuke analitičara",
+                Language.ENGLISH: "Analyst recommendations",
+            },
+            "analyst_intro": {
+                Language.SERBIAN: "Ovo je automatski generisan izveštaj o preporukama analitičara. Preporuka analitičara se meri indeksom koji ima vrednosti od -100 (jaka preporuka na prodaju) do 100 (jaka preporuka na kupovanje)",
+                Language.ENGLISH: "This is an automatically generated report on analyst recommendations. Analyst recommendation is measured by an index that has values from -100 (strong sell recommendation) to 100 (strong buy recommendation)",
+            },
+            "analyst_sells": {
+                Language.SERBIAN: "Najjače preporuke na prodaju",
+                Language.ENGLISH: "Strongest Sell Recommendations",
+            },
+            "analyst_buys": {
+                Language.SERBIAN: "Najjače preporuke na kupovanje",
+                Language.ENGLISH: "Strongest Buy Recommendations",
+            },
+            "analyst_ticker": {
+                Language.SERBIAN: "Tiker",
+                Language.ENGLISH: "Ticker",
+            },
+            "analyst_index": {
+                Language.SERBIAN: "Indeks preporuke",
+                Language.ENGLISH: "Recommendation Index",
+            },
             # Graph builder localization
             "graph_days": {Language.SERBIAN: "Dani", Language.ENGLISH: "Days"},
             "graph_price": {

@@ -1,6 +1,7 @@
 import logging
 from typing import Dict
 
+from managers.analyst_manager import AnalystManager
 from managers.earnings_manager import EarningsManager
 from managers.insider_manager import InsiderManager
 from managers.news_manager import NewsManager
@@ -26,6 +27,7 @@ class Jinance(metaclass=SingletonMeta):
         self._news_manager = NewsManager("yahoo")
         self._price_performance_manager = PricePerformanceManager("yahoo")
         self._insider_manager = InsiderManager("yahoo")
+        self._analyst_manager = AnalystManager("yahoo")
         self._report_builder = ReportBuilderDirector(Language.ENGLISH)
 
     def generate_report(self, number_of_companies: int = 5) -> str:
@@ -50,8 +52,14 @@ class Jinance(metaclass=SingletonMeta):
 
         insider_data = self._insider_manager.get_insider_trades(5)
 
+        analyst_recommendations = self._analyst_manager.get_analyst_recommendations(5)
+
         pdf_path = self._report_builder.create_pdf_report(
-            earnings_data, news_data, price_performance_data, insider_data
+            earnings_data,
+            news_data,
+            price_performance_data,
+            insider_data,
+            analyst_recommendations,
         )
 
         return pdf_path
