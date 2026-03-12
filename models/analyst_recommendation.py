@@ -1,7 +1,7 @@
 class AnalystRecommendation:
     def __init__(self, ticker: str, index: float):
         self._ticker = ticker
-        self._index = index
+        self._index = index if index >= -100 and index <= 100 else 0
 
     @property
     def ticker(self) -> str:

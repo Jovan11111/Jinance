@@ -1,8 +1,8 @@
 class AggregatedInsiderInfo:
     def __init__(self, ticker: str, bought: float, sold: float):
         self._ticker = ticker
-        self._bought = bought
-        self._sold = sold
+        self._bought = bought if bought >= 0 else 0
+        self._sold = sold if sold >= 0 else 0
 
     @property
     def ticker(self) -> str:

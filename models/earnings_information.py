@@ -21,10 +21,10 @@ class EarningsInformation:
         self._ticker: str = ticker
         self._name: str = name
         self._value_last_15_days: list[float] = value_last_15_days
-        self._market_cap: int = market_cap
+        self._market_cap: int = market_cap if market_cap >= 0 else 0
         self._eps: EpsInformation = eps
         self._date: datetime = date
-        self._revenue: int = revenue
+        self._revenue: int = revenue if revenue >= 0 else 0
         self._previous_earnings: list[PreviousEarningsInformation] = previous_earnings
 
     @property

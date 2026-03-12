@@ -9,6 +9,7 @@ from managers.price_performance_manager import PricePerformanceManager
 from models.earnings_information import EarningsInformation
 from models.news_article import NewsArticle
 from models.price_performance_information import PricePerformanceInformation
+from models.report_information import ReportInformation
 from report_building.report_builder_director import ReportBuilderDirector
 from utils.enums.language import Language
 from utils.logger import setup_logging
@@ -54,12 +55,13 @@ class Jinance(metaclass=SingletonMeta):
 
         analyst_recommendations = self._analyst_manager.get_analyst_recommendations(5)
 
-        pdf_path = self._report_builder.create_pdf_report(
-            earnings_data,
-            news_data,
-            price_performance_data,
-            insider_data,
-            analyst_recommendations,
+        report_info = ReportInformation(
+            earn_info=earnings_data,
+            news=news_data,
+            price_perf=price_performance_data,
+            insiders=insider_data,
+            analysts=analyst_recommendations,
         )
+        pdf_path = self._report_builder.create_pdf_report(report_info)
 
         return pdf_path

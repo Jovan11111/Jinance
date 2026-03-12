@@ -14,7 +14,7 @@ class InsiderInformation:
         date: datetime,
     ):
         self._ticker: str = ticker
-        self._value: float = value
+        self._value: float = value if value >= 0 else 0
         self._type: TradeType = type
         self._date: datetime = date
 

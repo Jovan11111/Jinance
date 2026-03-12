@@ -1,15 +1,20 @@
 from datetime import datetime, timedelta, timezone
+from typing import Dict
 from unittest.mock import MagicMock
 
 import pandas as pd
 import pytest
 
+from models.aggregated_insider_info import AggregatedInsiderInfo
+from models.analyst_recommendation import AnalystRecommendation
 from models.earnings_information import EarningsInformation
 from models.eps_information import EpsInformation
+from models.insider_information import InsiderInformation
 from models.news_article import NewsArticle
 from models.previous_earnings_information import PreviousEarningsInformation
 from models.price_performance_information import PricePerformanceInformation
 from models.report_information import ReportInformation
+from utils.enums.trade_type import TradeType
 
 # --------------------------------------------------------------------------------------
 # Fixtures for creating objects.
@@ -64,19 +69,96 @@ def fixture_create_earn_info(create_eps_info: EpsInformation) -> EarningsInforma
     )
 
 
+@pytest.fixture(name="create_aggregated_insider_information")
+def fixture_create_aggregated_insider_information() -> AggregatedInsiderInfo:
+    return AggregatedInsiderInfo("TCK", 100, 200)
+
+
+@pytest.fixture(name="create_analyst_recommendation")
+def fixture_create_analyst_recommendation() -> AnalystRecommendation:
+    return AnalystRecommendation("TCK", 56)
+
+
+@pytest.fixture(name="create_insider_information")
+def fixture_create_insider_information() -> InsiderInformation:
+    return InsiderInformation("TCK", 123, TradeType.BUY, datetime(2026, 4, 9, 12, 0, 0))
+
+
+@pytest.fixture(name="create_price_perf_dict")
+def fixture_create_price_perf_dict(
+    create_price_perf: PricePerformanceInformation,
+) -> Dict[str, list[PricePerformanceInformation]]:
+    return {"winners": [create_price_perf], "losers": [create_price_perf]}
+
+
+@pytest.fixture(name="create_aggregated_insider_information_dict")
+def fixture_create_aggregated_insider_information_dict(
+    create_aggregated_insider_information: AggregatedInsiderInfo,
+) -> Dict[str, list[AggregatedInsiderInfo]]:
+    return {
+        "buyers": [create_aggregated_insider_information],
+        "sellers": [create_aggregated_insider_information],
+    }
+
+
+@pytest.fixture(name="create_analyst_recommendation_dict")
+def fixture_create_analyst_recommendation_dict(
+    create_analyst_recommendation: AnalystRecommendation,
+) -> Dict[str, list[AnalystRecommendation]]:
+    return {
+        "buy": [create_analyst_recommendation],
+        "sell": [create_analyst_recommendation],
+    }
+
+
+@pytest.fixture(name="create_false_aggregated_insider_information")
+def fixture_create_false_aggregated_insider_information() -> AggregatedInsiderInfo:
+    return AggregatedInsiderInfo("TCK", -100, -200)
+
+
+@pytest.fixture(name="create_false_analyst_recommendation")
+def fixture_create_false_analyst_recommendation() -> AnalystRecommendation:
+    return AnalystRecommendation("TCK", 150)
+
+
+@pytest.fixture(name="create_false_insider_information")
+def fixture_create_false_insider_information() -> InsiderInformation:
+    return InsiderInformation("TCK", -123, TradeType.BUY, datetime(2026, 4, 9))
+
+
+@pytest.fixture(name="create_false_earnings_information")
+def fixture_create_false_earnings_information(
+    create_eps_info: EpsInformation,
+) -> EarningsInformation:
+    epsi = create_eps_info
+    return EarningsInformation(
+        ticker="TCK",
+        name="company",
+        value_last_15_days=[1.2, 2.3, 3.4],
+        market_cap=-123456,
+        eps=epsi,
+        date=None,
+        revenue=-1234567,
+        previous_earnings=[],
+    )
+
+
 @pytest.fixture(name="create_report_info", scope="function")
 def fixture_create_report_info(
     create_earn_info: EarningsInformation,
     create_news_article: NewsArticle,
-    create_price_perf: PricePerformanceInformation,
+    create_price_perf_dict: Dict[str, list[PricePerformanceInformation]],
+    create_aggregated_insider_information_dict: Dict[str, list[AggregatedInsiderInfo]],
+    create_analyst_recommendation_dict: Dict[str, list[AnalystRecommendation]],
 ) -> ReportInformation:
     ei1 = create_earn_info
     ei2 = create_earn_info
     na1 = create_news_article
     na2 = create_news_article
-    pp1 = create_price_perf
-    pp2 = create_price_perf
-    return ReportInformation([ei1, ei2], [na1, na2], [pp1, pp2])
+    pp = create_price_perf_dict
+    ai = create_aggregated_insider_information_dict
+    ar = create_analyst_recommendation_dict
+    return ReportInformation([ei1, ei2], [na1, na2], pp, ai, ar)
 
 
 # --------------------------------------------------------------------------------------

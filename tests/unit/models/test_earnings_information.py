@@ -36,3 +36,14 @@ class TestEarningsInformation:
             "revenue": 1234567,
             "previous_earnings": [],
         }
+
+    def test__create_false_earnings_information__negative_values_set_to_zero(
+        self,
+        create_eps_info: EpsInformation,
+        create_false_earnings_information: EarningsInformation,
+    ):
+        """Test that negative values for market cap and revenue are set to zero."""
+        ei = create_false_earnings_information
+
+        assert ei.market_cap == 0
+        assert ei.revenue == 0

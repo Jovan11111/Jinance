@@ -11,6 +11,7 @@ from models.analyst_recommendation import AnalystRecommendation
 from models.earnings_information import EarningsInformation
 from models.news_article import NewsArticle
 from models.price_performance_information import PricePerformanceInformation
+from models.report_information import ReportInformation
 from report_building.analyst_builder import AnalystBuilder
 from report_building.earnings_builder import EarningsBuilder
 from report_building.insider_builder import InsiderBuilder
@@ -80,14 +81,7 @@ class ReportBuilderDirector:
         md.append(self.analyst_builder.build_markdown(analyst_recommendations))
         return "\n".join(md)
 
-    def create_pdf_report(
-        self,
-        earnings_data: list[EarningsInformation],
-        news_data: list[NewsArticle],
-        price_performance_data: Dict[str, list[PricePerformanceInformation]],
-        insider_data: Dict[str, list[AggregatedInsiderInfo]],
-        analyst_recommendations: Dict[str, list[AnalystRecommendation]],
-    ) -> str:
+    def create_pdf_report(self, report_info: ReportInformation) -> str:
         """Creates a pdf report that is a final produce of the whole application.
 
         Args:
@@ -99,11 +93,11 @@ class ReportBuilderDirector:
         """
         logger.debug("Creating PDF report.")
         md_content = self._build_markdown(
-            earnings_data,
-            news_data,
-            price_performance_data,
-            insider_data,
-            analyst_recommendations,
+            report_info.earnings_information,
+            report_info.news,
+            report_info.price_performance_information,
+            report_info.insider_trades,
+            report_info.analyst_recommendations,
         )
 
         today_str = date.today().strftime("%Y%m%d")
