@@ -14,10 +14,10 @@ class PricePerformanceManager:
     """Class that manages price performance for companies."""
 
     def __init__(
-        self, provider: str = "yahoo", days_ahead=180, tickers=constants.TICKERS_SP_100
+        self, provider: str = "yahoo", days_behind=180, tickers=constants.TICKERS_SP_100
     ):
         logger.debug("PricePerformanceManager initialized.")
-        self._days_ahead = days_ahead if days_ahead > 0 else 180
+        self._days_behind = days_behind if days_behind > 0 else 180
         self._tickers: list[str] = tickers
         if provider == "yahoo":
             self._provider = YahooPricePerformanceProvider()
@@ -26,9 +26,9 @@ class PricePerformanceManager:
             self._provider = YahooPricePerformanceProvider()
 
     @property
-    def days_ahead(self) -> int:
-        """Getter for days_ahead."""
-        return self._days_ahead
+    def days_behind(self) -> int:
+        """Getter for days_behind."""
+        return self._days_behind
 
     @property
     def tickers(self) -> list[str]:
@@ -60,7 +60,7 @@ class PricePerformanceManager:
             f"Fetching best and worst price performance for {number_of_companies} companies."
         )
         performances = self.provider.fetch_price_performance(
-            self.tickers, self.days_ahead
+            self.tickers, self.days_behind
         )
         performances.sort(key=lambda p: p.percent_change, reverse=True)
 

@@ -25,7 +25,7 @@ class Jinance(metaclass=SingletonMeta):
         setup_logging()
         logger.debug("Jinance instance created.")
         self._earnings_manager = EarningsManager("yahoo")
-        self._news_manager = NewsManager("yahoo", 2)
+        self._news_manager = NewsManager("yahoo", 1)
         self._price_performance_manager = PricePerformanceManager("yahoo")
         self._insider_manager = InsiderManager("yahoo")
         self._analyst_manager = AnalystManager("yahoo")
@@ -45,7 +45,7 @@ class Jinance(metaclass=SingletonMeta):
             self._earnings_manager.get_latest_upcoming_earnings(number_of_companies)
         )
 
-        news_data: list[NewsArticle] = self._news_manager.get_latest_news()
+        news_data: list[NewsArticle] = self._news_manager.get_latest_news(10)
 
         price_performance_data: Dict[str, list[PricePerformanceInformation]] = (
             self._price_performance_manager.get_best_worst_price_performance(3)

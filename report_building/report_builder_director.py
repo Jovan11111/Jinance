@@ -1,24 +1,12 @@
 import logging
 import os
 from datetime import date
-from typing import Dict
 
 import markdown as md_pkg
 from weasyprint import HTML
 
-from models.aggregated_insider_info import AggregatedInsiderInfo
-from models.analyst_recommendation import AnalystRecommendation
-from models.earnings_information import EarningsInformation
-from models.news_article import NewsArticle
-from models.price_performance_information import PricePerformanceInformation
 from models.report_information import ReportInformation
-from report_building.analyst_builder import AnalystBuilder
-from report_building.earnings_builder import EarningsBuilder
-from report_building.insider_builder import InsiderBuilder
-from report_building.news_builder import NewsBuilder
-from report_building.price_performance_builder import PricePerformanceBuilder
 from utils.enums.language import Language
-from utils.localization import Localization
 
 logger = logging.getLogger(__name__)
 
@@ -28,45 +16,9 @@ class ReportBuilderDirector:
 
     def __init__(self, language: Language = Language.SERBIAN):
         logger.debug("ReportBuilderDirector initialized.")
-        self.localization = Localization(language)
-        self._earnings_builder = EarningsBuilder(self.localization)
-        self._news_builder = NewsBuilder(self.localization)
-        self._price_performance_builder = PricePerformanceBuilder(self.localization)
-        self._insider_builder = InsiderBuilder(self.localization)
-        self._analyst_builder = AnalystBuilder(self.localization)
-
-    @property
-    def earnings_builder(self) -> EarningsBuilder:
-        """Getter for earnings builder that is being used."""
-        return self._earnings_builder
-
-    @property
-    def news_builder(self) -> NewsBuilder:
-        """Getter for news builder that is being used."""
-        return self._news_builder
-
-    @property
-    def price_performance_builder(self) -> PricePerformanceBuilder:
-        """Getter for price performance builder that is being used."""
-        return self._price_performance_builder
-
-    @property
-    def insider_builder(self) -> InsiderBuilder:
-        """Getter for insider builder that is being used."""
-        return self._insider_builder
-
-    @property
-    def analyst_builder(self) -> AnalystBuilder:
-        """Getter for analyst builder that is being used."""
-        return self._analyst_builder
 
     def _build_markdown(
         self,
-        earnings_data: list[EarningsInformation],
-        news_data: list[NewsArticle],
-        price_performance_data: Dict[str, list[PricePerformanceInformation]],
-        insider_data: Dict[str, list[AggregatedInsiderInfo]],
-        analyst_recommendations: Dict[str, list[AnalystRecommendation]],
     ) -> str:
         """Creates a whole report in .md format by calling all other builders it contains."""
         logger.debug("Building markdown content for the report.")
@@ -74,11 +26,7 @@ class ReportBuilderDirector:
 
         md = []
         md.append(f"# {self.localization.translate("report_title")} {today}")
-        md.append(self.earnings_builder.build_markdown(earnings_data))
-        md.append(self.news_builder.build_markdown(news_data))
-        md.append(self.price_performance_builder.build_markdown(price_performance_data))
-        md.append(self.insider_builder.build_markdown(insider_data))
-        md.append(self.analyst_builder.build_markdown(analyst_recommendations))
+
         return "\n".join(md)
 
     def create_pdf_report(self, report_info: ReportInformation) -> str:
@@ -92,13 +40,7 @@ class ReportBuilderDirector:
             str: path to a pdf report that is created and saved.
         """
         logger.debug("Creating PDF report.")
-        md_content = self._build_markdown(
-            report_info.earnings_information,
-            report_info.news,
-            report_info.price_performance_information,
-            report_info.insider_trades,
-            report_info.analyst_recommendations,
-        )
+        md_content = ""
 
         today_str = date.today().strftime("%Y%m%d")
 

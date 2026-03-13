@@ -12,7 +12,7 @@ class TestPricePerformanceManager:
         """Check if initializing price performance manager with default data initializes it correctly."""
         pp_manager = PricePerformanceManager("yahoo", 123, constants.TICKERS_SP_50)
 
-        assert pp_manager.days_ahead == 123
+        assert pp_manager.days_behind == 123
         assert pp_manager.tickers == constants.TICKERS_SP_50
         assert isinstance(pp_manager.provider, YahooPricePerformanceProvider)
 
@@ -22,7 +22,7 @@ class TestPricePerformanceManager:
         """Check if initializing price performance manager with negative days ahead initializes it with default days ahead."""
         pp_manager = PricePerformanceManager("yahoo", -15, constants.TICKERS_SP_50)
 
-        assert pp_manager.days_ahead == 180
+        assert pp_manager.days_behind == 180
         assert pp_manager.tickers == constants.TICKERS_SP_50
         assert isinstance(pp_manager.provider, YahooPricePerformanceProvider)
 
@@ -32,7 +32,7 @@ class TestPricePerformanceManager:
         """Check if PP manager is initialized with default values when no other are given."""
         pp_manager = PricePerformanceManager()
 
-        assert pp_manager.days_ahead == 180
+        assert pp_manager.days_behind == 180
         assert pp_manager.tickers == constants.TICKERS_SP_100
         assert isinstance(pp_manager.provider, YahooPricePerformanceProvider)
 
@@ -44,7 +44,7 @@ class TestPricePerformanceManager:
             "NON_EXISTENT", 456, constants.TICKERS_SP_10
         )
 
-        assert pp_manager.days_ahead == 456
+        assert pp_manager.days_behind == 456
         assert pp_manager.tickers == constants.TICKERS_SP_10
         assert isinstance(pp_manager.provider, YahooPricePerformanceProvider)
 

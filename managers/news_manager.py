@@ -29,8 +29,11 @@ class NewsManager:
             self.provider = YahooNewsProvider()
         self.filter = NewsFilter()
 
-    def get_latest_news(self) -> list[NewsArticle]:
-        """Returns 10 most important news in the selected time period.
+    def get_latest_news(self, number_of_articles: int) -> list[NewsArticle]:
+        """Returns the specified number of most important news articles in the selected time period.
+
+        Args:
+            number_of_articles (int): The number of articles to return.
 
         Returns:
             list[NewsArticle]: List of news articles.
@@ -39,5 +42,7 @@ class NewsManager:
             f"Fetching latest news articles in the last {self.days_behind} days."
         )
         all_news = self.provider.fetch_news(self.tickers, self.days_behind)
-        filtered_news = self.filter.filter_news(all_news, 10, self.days_behind)
+        filtered_news = self.filter.filter_news(
+            all_news, number_of_articles, self.days_behind
+        )
         return filtered_news
