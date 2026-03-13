@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import re
+import time
 from datetime import datetime
 
 import requests
@@ -23,9 +25,13 @@ class AiService(metaclass=SingletonMeta):
     GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
     MODEL = "llama-3.1-8b-instant"
 
+    BATCH_SIZE = 50
+    MAX_RETRIES = 3
+
     def __init__(self):
         logger.debug("AI Service initialized.")
         self.api_key = os.getenv("GROQ_API_KEY")
+
         if not self.api_key:
             logger.error("GROQ_API_KEY not found in environment")
             raise RuntimeError("GROQ_API_KEY not found in environment")
@@ -42,13 +48,39 @@ class AiService(metaclass=SingletonMeta):
         Returns:
             list[NewsArticle]: list of articles most likely to affect the market
         """
-        logger.debug("Filtering news articles using AI service.")
-        prompt, summary_map = self._build_prompt(news, top_k)
-        response = self._call_groq(prompt)
+        logger.debug("Filtering news with AI.")
 
-        return self._parse_response(response, summary_map)
+        if len(news) <= top_k:
+            return news
 
-    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> tuple[str, dict]:
+        summary_map = {n.url: n.summary for n in news}
+        try:
+            if len(news) <= self.BATCH_SIZE:
+                prompt = self._build_prompt(news, top_k)
+                response = self._call_groq(prompt)
+                return self._parse_response(response, summary_map)
+
+            logger.debug("Entering batch processing mode for AI filtering.")
+            finalists = []
+            for i in range(0, len(news), self.BATCH_SIZE):
+                batch = news[i : i + self.BATCH_SIZE]
+                prompt = self._build_prompt(batch, top_k)
+                response = self._call_groq(prompt)
+                parsed = self._parse_response(response, summary_map)
+                finalists.extend(parsed)
+                time.sleep(20)
+
+            time.sleep(20)
+            prompt = self._build_prompt(finalists, top_k)
+            response = self._call_groq(prompt)
+
+            return self._parse_response(response, summary_map)
+
+        except Exception as e:
+            logger.warning(f"AI filtering failed: {e}")
+            return self._fallback(news, top_k)
+
+    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
         """Builds the prompt sent to the AI model.
 
         Args:
@@ -56,48 +88,41 @@ class AiService(metaclass=SingletonMeta):
             top_k (int): Number of news that are left after filtering
 
         Returns:
-            tuple[str, dict]: Prompt string and dict mapping (url) -> summary
+            str: Prompt string
         """
         logger.debug("Building prompt for AI model.")
-        # Create a mapping of url -> summary to restore later
-        summary_map = {article.url: article.summary for article in news}
-
-        # Create dicts without summary to reduce payload size
         news_dicts = []
+
         for article in news:
-            d = article.to_dict()
-            # Remove summary to reduce payload size
-            d.pop("summary", None)
-            news_dicts.append(d)
+            news_dicts.append(
+                {
+                    "pubTime": article.pub_time.isoformat(),
+                    "title": article.title,
+                    "url": article.url,
+                    "ticker": article.ticker,
+                }
+            )
 
         prompt = f"""
 You are a financial markets AI.
 
-You will receive a list of recent financial news articles.
-Each article has:
+Select the {top_k} news articles MOST likely to impact stock prices.
+Return ONLY valid JSON array in the same format that is given to you.
+
+Each object must contain exactly:
 - pubTime
 - title
 - url
 - ticker
 
-Your task:
-Select the {top_k} articles that are MOST LIKELY to significantly impact stock prices in the upcoming days/weeks.
-
-Return ONLY a JSON array of article objects.
-Each object MUST contain exactly:
-pubTime, title, url, ticker
-DO NOT RETURN A JSON CODE BLOCK, ONLY THE RAW JSON.
-
-DO NOT add explanations.
-DO NOT add extra fields.
-DO NOT return text outside JSON.
-Return ONLY {top_k} most impactful articles.
+Return exactly {top_k} articles if {top_k} are available.
+If fewer than {top_k} articles are provided, return all of them.
 
 Articles:
-{json.dumps(news_dicts, indent=2, default=str)}
+{json.dumps(news_dicts)}
 """.strip()
 
-        return prompt, summary_map
+        return prompt
 
     def _call_groq(self, prompt: str) -> str:
         """Sends a request to an AI model
@@ -108,10 +133,16 @@ Articles:
         Returns:
             str: Response from the AI model
         """
-        logger.debug("Calling GROQ AI model.")
+        logger.debug("Calling GROQ API.")
         payload = {
             "model": self.MODEL,
-            "messages": [{"role": "user", "content": prompt}],
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a financial news ranking AI. Output only valid JSON.",
+                },
+                {"role": "user", "content": prompt},
+            ],
             "temperature": 0,
         }
 
@@ -120,15 +151,51 @@ Articles:
             "Content-Type": "application/json",
         }
 
-        response = requests.post(
-            self.GROQ_API_URL,
-            json=payload,
-            headers=headers,
-            timeout=30,
-        )
-        response.raise_for_status()
+        for attempt in range(self.MAX_RETRIES):
+            try:
+                response = requests.post(
+                    self.GROQ_API_URL,
+                    json=payload,
+                    headers=headers,
+                    timeout=(5, 20),
+                )
 
-        return response.json()["choices"][0]["message"]["content"]
+                response.raise_for_status()
+                content = response.json()["choices"][0]["message"]["content"]
+                return content
+
+            except requests.RequestException as e:
+                logger.warning(f"GROQ call failed attempt {attempt+1}: {e}")
+                if attempt == self.MAX_RETRIES - 1:
+                    raise
+
+                time.sleep(2 ** (attempt + 1))
+
+    def _extract_json(self, text: str):
+        """Extract JSON from the response from AI.
+
+        If non valid json is return, find a substring from 1st [ to last ]
+
+        Args:
+            text (str): Reposnse from AI model
+
+        Returns:
+            JSON formatted response or None if no valid JSON found
+        """
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+
+        match = re.search(r"\[.*\]", text, re.DOTALL)
+
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except json.JSONDecodeError:
+                pass
+
+        return None
 
     def _parse_response(self, response: str, summary_map: dict) -> list[NewsArticle]:
         """Since AI doesn't know about internal data classes, parses the response to a list of NewsArticles
@@ -137,47 +204,54 @@ Articles:
             response (str): Response string from the AI model
             summary_map (dict): Mapping of url -> summary to restore original summaries
 
-        Raises:
-            ValueError: Raised when the response is not valid JSON or doesn't match expected format
-            RuntimeError: Raised if any type error occurs during parsing
-
         Returns:
             list[NewsArticle]: List of NewsArticle objects parsed from the response
         """
-        try:
-            logger.debug("Parsing response from AI model.")
-            data = json.loads(response)
-            if not isinstance(data, list):
-                logger.error("AI response is not a list")
-                raise ValueError("AI response is not a list")
+        data = self._extract_json(response)
+        if data is None:
+            raise RuntimeError("AI returned invalid JSON")
 
-            articles: list[NewsArticle] = []
+        articles: list[NewsArticle] = []
+        for item in data:
+            if not isinstance(item, dict):
+                continue
 
-            for item in data:
-                if not isinstance(item, dict):
-                    logger.error("Article item is not a dict")
-                    raise ValueError("Article item is not a dict")
+            url = item.get("url")
 
-                pub_time = item.get("pubTime")
-                if isinstance(pub_time, str):
+            if url not in summary_map:
+                continue
+
+            pub_time = item.get("pubTime")
+
+            if isinstance(pub_time, str):
+                try:
                     pub_time = datetime.fromisoformat(pub_time.replace("Z", "+00:00"))
+                except Exception:
+                    pub_time = None
 
-                # Restore the original summary from the mapping
-                url = item.get("url")
-                original_summary = summary_map.get(url, "")
-
-                articles.append(
-                    NewsArticle(
-                        title=item.get("title", ""),
-                        summary=original_summary,
-                        pub_time=pub_time,
-                        url=url,
-                        ticker=item.get("ticker", ""),
-                    )
+            articles.append(
+                NewsArticle(
+                    title=item.get("title", ""),
+                    summary=summary_map.get(url, ""),
+                    pub_time=pub_time,
+                    url=url,
+                    ticker=item.get("ticker", ""),
                 )
+            )
 
-            return articles
+        return articles
 
-        except Exception as e:
-            logger.error(f"Error parsing AI response: {e}")
-            raise RuntimeError(f"Invalid AI response: {response}") from e
+    def _fallback(self, news: list[NewsArticle], top_k: int) -> list[NewsArticle]:
+        """Return latest top_k articles if groq is not responding.
+
+        This exists so the whole app doesn't crash when groq doesn't work.
+
+        Args:
+            news (list[NewsArticle]): list of all news articles to filter
+            top_k (int, optional): Number of news that are left after filtering. Defaults to 10.
+
+        Returns:
+            list[NewsArticle]: First {top_k} articles from the input list, sorted by publish time descending.
+        """
+        logger.warning("Using fallback news selection")
+        return sorted(news, key=lambda x: x.pub_time, reverse=True)[:top_k]

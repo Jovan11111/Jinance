@@ -25,7 +25,7 @@ class Jinance(metaclass=SingletonMeta):
         setup_logging()
         logger.debug("Jinance instance created.")
         self._earnings_manager = EarningsManager("yahoo")
-        self._news_manager = NewsManager("yahoo")
+        self._news_manager = NewsManager("yahoo", 2)
         self._price_performance_manager = PricePerformanceManager("yahoo")
         self._insider_manager = InsiderManager("yahoo")
         self._analyst_manager = AnalystManager("yahoo")
