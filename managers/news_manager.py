@@ -4,6 +4,7 @@ from filters.news_filter import NewsFilter
 from models.news_article import NewsArticle
 from providers.yahoo.yahoo_news_provider import YahooNewsProvider
 from utils import constants
+from utils.enums.provider_type import ProviderType
 
 logger = logging.getLogger(__name__)
 
@@ -13,14 +14,14 @@ class NewsManager:
 
     def __init__(
         self,
-        provider: str = "yahoo",
+        provider: ProviderType = ProviderType.YAHOO,
         days_behind=1,
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("NewsManager initialized.")
         self.days_behind = days_behind if days_behind > 0 else 1
         self.tickers = tickers
-        if provider == "yahoo":
+        if provider == ProviderType.YAHOO:
             self.provider = YahooNewsProvider()
         else:
             logger.warning(

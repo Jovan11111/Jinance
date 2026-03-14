@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    pdf_path = Jinance.get_instance().generate_report(number_of_companies=5)
+    pdf_path = Jinance.get_instance().generate_report()
     logger.info(f"PDF report written to: {pdf_path}")
 
 

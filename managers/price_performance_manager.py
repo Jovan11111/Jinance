@@ -6,6 +6,7 @@ from providers.yahoo.yahoo_price_performance_provider import (
     YahooPricePerformanceProvider,
 )
 from utils import constants
+from utils.enums.provider_type import ProviderType
 
 logger = logging.getLogger(__name__)
 
@@ -14,12 +15,15 @@ class PricePerformanceManager:
     """Class that manages price performance for companies."""
 
     def __init__(
-        self, provider: str = "yahoo", days_behind=180, tickers=constants.TICKERS_SP_100
+        self,
+        provider: ProviderType.YAHOO,
+        days_behind=180,
+        tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("PricePerformanceManager initialized.")
         self._days_behind = days_behind if days_behind > 0 else 180
         self._tickers: list[str] = tickers
-        if provider == "yahoo":
+        if provider == ProviderType.YAHOO:
             self._provider = YahooPricePerformanceProvider()
         else:
             logger.warning("Chose a non existent provider, using a default one...")

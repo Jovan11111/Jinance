@@ -4,6 +4,7 @@ from typing import Dict
 from models.analyst_recommendation import AnalystRecommendation
 from providers.yahoo.yahoo_analyst_provider import YahooAnalystProvider
 from utils import constants
+from utils.enums.provider_type import ProviderType
 
 logger = logging.getLogger(__name__)
 
@@ -12,11 +13,13 @@ class AnalystManager:
     """Class that manages fetching and filtering analyst recommendations."""
 
     def __init__(
-        self, provider: str = "yahoo", tickers: list[str] = constants.TICKERS_SP_100
+        self,
+        provider: ProviderType = ProviderType.YAHOO,
+        tickers: list[str] = constants.TICKERS_SP_100,
     ):
         logger.debug("AnalystManager initialized.")
         self._tickers = tickers
-        if provider == "yahoo":
+        if provider == ProviderType.YAHOO:
             self._provider = YahooAnalystProvider()
         else:
             logger.warning(

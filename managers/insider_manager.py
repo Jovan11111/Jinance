@@ -5,6 +5,7 @@ from filters.insider_info_filter import InsiderInfoFilter
 from models.aggregated_insider_info import AggregatedInsiderInfo
 from providers.yahoo.yahoo_insider_provider import YahooInsiderProvider
 from utils import constants
+from utils.enums.provider_type import ProviderType
 from utils.enums.trade_type import TradeType
 
 logger = logging.getLogger(__name__)
@@ -14,12 +15,15 @@ class InsiderManager:
     """Manages fetching and filtering insider trading data."""
 
     def __init__(
-        self, provider: str = "yahoo", days_behind=30, tickers=constants.TICKERS_SP_100
+        self,
+        provider: ProviderType = ProviderType.YAHOO,
+        days_behind=30,
+        tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("InsiderManager initialized.")
         self._tickers = tickers
         self._filter = InsiderInfoFilter(days_behind=days_behind)
-        if provider == "yahoo":
+        if provider == ProviderType.YAHOO:
             self._provider = YahooInsiderProvider()
         else:
             logger.warning(

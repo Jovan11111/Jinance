@@ -4,7 +4,7 @@
             "type": "earnings",
             "language": "en",
             "provider": "yahoo",
-            "tickers": "SP_TOP_100",
+            "tickers": "TICKERS_SP_100",
             "days_ahead": 30,
             "number_of_companies": 5
         },
@@ -12,7 +12,7 @@
             "type": "news",
             "language": "en",
             "provider": "yahoo",
-            "tickers": "SP_TOP_100",
+            "tickers": "TICKERS_SP_100",
             "days_behind": 1,
             "number_of_articles": 10
         },
@@ -20,7 +20,7 @@
             "type": "price_performance",
             "language": "en",
             "provider": "yahoo",
-            "tickers": "SP_TOP_100",
+            "tickers": "TICKERS_SP_100",
             "days_behind": 180,
             "number_of_companies": 3
         },
@@ -28,7 +28,7 @@
             "type": "insider_trades",
             "language": "en",
             "provider": "yahoo",
-            "tickers": "SP_TOP_100",
+            "tickers": "TICKERS_SP_100",
             "days_behind": 30,
             "number_of_companies": 3
         },
@@ -36,7 +36,7 @@
             "type": "analyst_ratings",
             "language": "en",
             "provider": "yahoo",
-            "tickers": "SP_TOP_100",
+            "tickers": "TICKERS_SP_100",
             "number_of_companies": 3
         }
     ]

@@ -16,11 +16,6 @@ class EarningsBuilder(ReportBuilder):
         self.localization = localization
         self._graph_builder = GraphBuilder(localization)
 
-    @property
-    def graph_builder(self) -> GraphBuilder:
-        """Getter for GraphBuilder object used to create graphs that are included."""
-        return self._graph_builder
-
     def build_markdown(self, earnings_data: list[EarningsInformation]) -> str:
         """Returns .md formatted report part that includes all given upcoming earnings information.
 
@@ -35,7 +30,7 @@ class EarningsBuilder(ReportBuilder):
         md.append(f"## {self.localization.translate("earnings_title")}\n")
         md.append(f"{self.localization.translate("earnings_intro")}\n")
         for earning in earnings_data:
-            graph_path = self.graph_builder.build_price_graph(
+            graph_path = self._graph_builder.build_price_graph(
                 earning.value_last_15_days, earning.ticker
             )
 

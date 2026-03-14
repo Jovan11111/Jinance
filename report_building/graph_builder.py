@@ -6,11 +6,12 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 from utils.localization import Localization
+from utils.singleton_meta import SingletonMeta
 
 logger = logging.getLogger(__name__)
 
 
-class GraphBuilder:
+class GraphBuilder(metaclass=SingletonMeta):
     """Class responsible for creating graphs that are represented in a report by using matplotlib library."""
 
     def __init__(self, localization: Localization, output_dir="graphs"):
