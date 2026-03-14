@@ -19,15 +19,15 @@ class NewsManager:
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("NewsManager initialized.")
-        self.days_behind = days_behind if days_behind > 0 else 1
-        self.tickers = tickers
+        self.__days_behind = days_behind if days_behind > 0 else 1
+        self.__tickers = tickers
         if provider == ProviderType.YAHOO:
-            self.provider = YahooNewsProvider()
+            self.__provider = YahooNewsProvider()
         else:
             logger.warning(
                 "Chose a non existent provider, initializing a default one..."
             )
-            self.provider = YahooNewsProvider()
+            self.__provider = YahooNewsProvider()
         self.filter = NewsFilter()
 
     def get_latest_news(self, number_of_articles: int) -> list[NewsArticle]:
@@ -39,11 +39,17 @@ class NewsManager:
         Returns:
             list[NewsArticle]: List of news articles.
         """
+        if number_of_articles < 1:
+            logger.warning(
+                "Insufficient number of articles for news information, setting the value to default..."
+            )
+            number_of_articles = 10
+
         logger.debug(
-            f"Fetching latest news articles in the last {self.days_behind} days."
+            f"Fetching latest news articles in the last {self.__days_behind} days."
         )
-        all_news = self.provider.fetch_news(self.tickers, self.days_behind)
+        all_news = self.__provider.fetch_news(self.__tickers, self.__days_behind)
         filtered_news = self.filter.filter_news(
-            all_news, number_of_articles, self.days_behind
+            all_news, number_of_articles, self.__days_behind
         )
         return filtered_news

@@ -1,4 +1,5 @@
 import json
+import logging
 from pathlib import Path
 from typing import Optional
 
@@ -8,11 +9,14 @@ from utils.enums.language import Language
 from utils.enums.provider_type import ProviderType
 from utils.enums.section_type import SectionType
 
+logger = logging.getLogger(__name__)
+
 
 class JsonDecoder:
 
     @staticmethod
     def decode(path_to_json_file: Path) -> list[SectionData]:
+        logger.debug("Decoding .json config file.")
         with open(path_to_json_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 

@@ -1,23 +1,23 @@
 class AggregatedInsiderInfo:
     def __init__(self, ticker: str, bought: float, sold: float):
-        self._ticker = ticker
-        self._bought = bought if bought >= 0 else 0
-        self._sold = sold if sold >= 0 else 0
+        self.__ticker = ticker
+        self.__bought = bought if bought >= 0 else 0
+        self.__sold = sold if sold >= 0 else 0
 
     @property
     def ticker(self) -> str:
         """Getter for the ticker of the filtered insider trading information."""
-        return self._ticker
+        return self.__ticker
 
     @property
     def bought(self) -> float:
         """Getter for the total value of bought insider trading information."""
-        return self._bought
+        return self.__bought
 
     @property
     def sold(self) -> float:
         """Getter for the total value of sold insider trading information."""
-        return self._sold
+        return self.__sold
 
     def to_dict(self) -> dict:
         """Convert FilteredInsiderInfo object to a dictionary."""

@@ -18,66 +18,66 @@ class EarningsInformation:
         revenue: int,
         previous_earnings: list[PreviousEarningsInformation],
     ):
-        self._ticker: str = ticker
-        self._name: str = name
-        self._value_last_15_days: list[float] = value_last_15_days
-        self._market_cap: int = market_cap if market_cap >= 0 else 0
-        self._eps: EpsInformation = eps
-        self._date: datetime = date
-        self._revenue: int = revenue if revenue >= 0 else 0
-        self._previous_earnings: list[PreviousEarningsInformation] = previous_earnings
+        self.__ticker: str = ticker
+        self.__name: str = name
+        self.__value_last_15_days: list[float] = value_last_15_days
+        self.__market_cap: int = market_cap if market_cap >= 0 else 0
+        self.__eps: EpsInformation = eps
+        self.__date: datetime = date
+        self.__revenue: int = revenue if revenue >= 0 else 0
+        self.__previous_earnings: list[PreviousEarningsInformation] = previous_earnings
 
     @property
     def ticker(self) -> str:
         """Getter for ticker symbol of the company."""
-        return self._ticker
+        return self.__ticker
 
     @property
     def name(self) -> str:
         """Getter for company name."""
-        return self._name
+        return self.__name
 
     @property
     def value_last_15_days(self) -> list[float]:
         """Getter for stock prices in the last 15 days."""
-        return self._value_last_15_days
+        return self.__value_last_15_days
 
     @property
     def market_cap(self) -> int:
         """Getter for market capitalization of the company."""
-        return self._market_cap
+        return self.__market_cap
 
     @property
     def eps(self) -> EpsInformation:
         """Getter for Earnings Per Share information."""
-        return self._eps
+        return self.__eps
 
     @property
     def date(self) -> datetime:
         """Getter for earnings announcement date."""
-        return self._date
+        return self.__date
 
     @property
     def revenue(self) -> int:
         """Getter for company revenue."""
-        return self._revenue
+        return self.__revenue
 
     @property
     def previous_earnings(self) -> list[PreviousEarningsInformation]:
         """Getter for previous earnings EPS information."""
-        return self._previous_earnings
+        return self.__previous_earnings
 
     def to_dict(self) -> dict:
         """Convert the EarningsInformation object to a dictionary."""
         return {
-            "ticker": self._ticker,
-            "name": self._name,
-            "value_last_15_days": self._value_last_15_days,
-            "market_cap": self._market_cap,
-            "eps": self._eps.to_dict(),
-            "date": self._date.isoformat() if self.date else "",
-            "revenue": self._revenue,
+            "ticker": self.__ticker,
+            "name": self.__name,
+            "value_last_15_days": self.__value_last_15_days,
+            "market_cap": self.__market_cap,
+            "eps": self.__eps.to_dict(),
+            "date": self.__date.isoformat() if self.date else "",
+            "revenue": self.__revenue,
             "previous_earnings": [
-                prev_earn.to_dict() for prev_earn in self._previous_earnings
+                prev_earn.to_dict() for prev_earn in self.__previous_earnings
             ],
         }

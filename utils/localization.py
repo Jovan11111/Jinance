@@ -3,8 +3,8 @@ from utils.enums.language import Language
 
 class Localization:
     def __init__(self, language: Language):
-        self.language = language
-        self.translations = {
+        self.__language = language
+        self.__translations = {
             # Report builder director localization
             "report_title": {
                 Language.SERBIAN: "Jinance izveštaj za",
@@ -184,6 +184,6 @@ class Localization:
         Returns:
             str: Translated string in the selected language. If the key doesn't exist, return empty string.
         """
-        if key not in self.translations:
+        if key not in self.__translations:
             return ""
-        return self.translations[key][self.language]
+        return self.__translations[key][self.__language]

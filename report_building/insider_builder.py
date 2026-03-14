@@ -13,7 +13,7 @@ class InsiderBuilder(ReportBuilder):
 
     def __init__(self, localization: Localization):
         logger.debug("InsiderBuilder initialized.")
-        self.localization = localization
+        super().__init__(localization)
 
     def build_markdown(
         self, insider_data: Dict[str, list[AggregatedInsiderInfo]]
@@ -29,13 +29,13 @@ class InsiderBuilder(ReportBuilder):
         logger.debug("Building insider markdown report part.")
         md: list[str] = []
 
-        md.append(f"## {self.localization.translate("insider_title")}\n")
-        md.append(f"{self.localization.translate("insider_intro")}\n")
+        md.append(f"## {self._localization.translate("insider_title")}\n")
+        md.append(f"{self._localization.translate("insider_intro")}\n")
 
         sellers = insider_data["sellers"]
-        md.append(f"### {self.localization.translate('insider_sellers')}\n")
+        md.append(f"### {self._localization.translate('insider_sellers')}\n")
         md.append(
-            f"| # | {self.localization.translate("insider_ticker")} | {self.localization.translate("insider_amount_sold")} |"
+            f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_sold")} |"
         )
         md.append("|---|--------|-------------|")
         for i, seller in enumerate(sellers, start=1):
@@ -46,9 +46,9 @@ class InsiderBuilder(ReportBuilder):
         md.append("\n")
 
         buyers = insider_data["buyers"]
-        md.append(f"### {self.localization.translate('insider_buyers')}\n")
+        md.append(f"### {self._localization.translate('insider_buyers')}\n")
         md.append(
-            f"| # | {self.localization.translate("insider_ticker")} | {self.localization.translate("insider_amount_bought")} |"
+            f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_bought")} |"
         )
         md.append("|---|--------|---------------|")
         for i, buyer in enumerate(buyers, start=1):

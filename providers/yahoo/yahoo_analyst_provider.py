@@ -22,6 +22,7 @@ class YahooAnalystProvider(AnalystProvider):
         Returns:
             list[AnalystRecommendation]: List of analyst recommendations for the given tickers.
         """
+        logger.debug("Fetching all analyst recommendations by using Yahoo Finance API.")
 
         analyst_recommendations: list[AnalystRecommendation] = []
 

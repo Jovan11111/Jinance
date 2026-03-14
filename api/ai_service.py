@@ -30,9 +30,9 @@ class AiService(metaclass=SingletonMeta):
 
     def __init__(self):
         logger.debug("AI Service initialized.")
-        self.api_key = os.getenv("GROQ_API_KEY")
+        self.__api_key = os.getenv("GROQ_API_KEY")
 
-        if not self.api_key:
+        if not self.__api_key:
             logger.error("GROQ_API_KEY not found in environment")
             raise RuntimeError("GROQ_API_KEY not found in environment")
 
@@ -56,31 +56,31 @@ class AiService(metaclass=SingletonMeta):
         summary_map = {n.url: n.summary for n in news}
         try:
             if len(news) <= self.BATCH_SIZE:
-                prompt = self._build_prompt(news, top_k)
-                response = self._call_groq(prompt)
-                return self._parse_response(response, summary_map)
+                prompt = self.__build_prompt(news, top_k)
+                response = self.__call_groq(prompt)
+                return self.__parse_response(response, summary_map)
 
             logger.debug("Entering batch processing mode for AI filtering.")
             finalists = []
             for i in range(0, len(news), self.BATCH_SIZE):
                 batch = news[i : i + self.BATCH_SIZE]
-                prompt = self._build_prompt(batch, top_k)
-                response = self._call_groq(prompt)
-                parsed = self._parse_response(response, summary_map)
+                prompt = self.__build_prompt(batch, top_k)
+                response = self.__call_groq(prompt)
+                parsed = self.__parse_response(response, summary_map)
                 finalists.extend(parsed)
                 time.sleep(20)
 
             time.sleep(20)
-            prompt = self._build_prompt(finalists, top_k)
-            response = self._call_groq(prompt)
+            prompt = self.__build_prompt(finalists, top_k)
+            response = self.__call_groq(prompt)
 
-            return self._parse_response(response, summary_map)
+            return self.__parse_response(response, summary_map)
 
         except Exception as e:
             logger.warning(f"AI filtering failed: {e}")
-            return self._fallback(news, top_k)
+            return self.__fallback(news, top_k)
 
-    def _build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
+    def __build_prompt(self, news: list[NewsArticle], top_k: int) -> str:
         """Builds the prompt sent to the AI model.
 
         Args:
@@ -124,7 +124,7 @@ Articles:
 
         return prompt
 
-    def _call_groq(self, prompt: str) -> str:
+    def __call_groq(self, prompt: str) -> str:
         """Sends a request to an AI model
 
         Args:
@@ -147,7 +147,7 @@ Articles:
         }
 
         headers = {
-            "Authorization": f"Bearer {self.api_key}",
+            "Authorization": f"Bearer {self.__api_key}",
             "Content-Type": "application/json",
         }
 
@@ -171,7 +171,7 @@ Articles:
 
                 time.sleep(2 ** (attempt + 1))
 
-    def _extract_json(self, text: str):
+    def __extract_json(self, text: str):
         """Extract JSON from the response from AI.
 
         If non valid json is return, find a substring from 1st [ to last ]
@@ -197,7 +197,7 @@ Articles:
 
         return None
 
-    def _parse_response(self, response: str, summary_map: dict) -> list[NewsArticle]:
+    def __parse_response(self, response: str, summary_map: dict) -> list[NewsArticle]:
         """Since AI doesn't know about internal data classes, parses the response to a list of NewsArticles
 
         Args:
@@ -207,7 +207,7 @@ Articles:
         Returns:
             list[NewsArticle]: List of NewsArticle objects parsed from the response
         """
-        data = self._extract_json(response)
+        data = self.__extract_json(response)
         if data is None:
             raise RuntimeError("AI returned invalid JSON")
 
@@ -241,7 +241,7 @@ Articles:
 
         return articles
 
-    def _fallback(self, news: list[NewsArticle], top_k: int) -> list[NewsArticle]:
+    def __fallback(self, news: list[NewsArticle], top_k: int) -> list[NewsArticle]:
         """Return latest top_k articles if groq is not responding.
 
         This exists so the whole app doesn't crash when groq doesn't work.

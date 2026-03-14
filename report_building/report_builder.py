@@ -1,8 +1,13 @@
 from abc import ABC, abstractmethod
 
+from utils.localization import Localization
+
 
 class ReportBuilder(ABC):
     """Interface for all classes that build different parts of the report."""
+
+    def __init__(self, localization: Localization):
+        self._localization = localization
 
     @abstractmethod
     def build_markdown(self) -> str:

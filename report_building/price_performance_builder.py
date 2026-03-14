@@ -15,13 +15,8 @@ class PricePerformanceBuilder(ReportBuilder):
 
     def __init__(self, localization: Localization):
         logger.debug("PricePerformanceBuilder initialized.")
-        self._graph_builder = GraphBuilder(localization)
-        self.localization = localization
-
-    @property
-    def graph_builder(self) -> GraphBuilder:
-        """Getter for GraphBuilder object used to create graphs that are included."""
-        return self._graph_builder
+        self.__graph_builder = GraphBuilder(localization)
+        super().__init__(localization)
 
     def build_markdown(
         self, price_perf_data: Dict[str, list[PricePerformanceInformation]]
@@ -36,11 +31,11 @@ class PricePerformanceBuilder(ReportBuilder):
         """
         logger.debug("Building price performance markdown report section.")
         md = []
-        md.append(f"## {self.localization.translate("price_perf_title")}\n")
-        md.append(f"{self.localization.translate("price_perf_intro")}\n")
-        md.append(f"### {self.localization.translate("price_perf_best")}\n")
+        md.append(f"## {self._localization.translate("price_perf_title")}\n")
+        md.append(f"{self._localization.translate("price_perf_intro")}\n")
+        md.append(f"### {self._localization.translate("price_perf_best")}\n")
         for price_perf in price_perf_data["winners"]:
-            graph_path = self.graph_builder.build_price_graph(
+            graph_path = self.__graph_builder.build_price_graph(
                 price_perf.prices, price_perf.ticker
             )
 
@@ -48,19 +43,19 @@ class PricePerformanceBuilder(ReportBuilder):
                 f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_old_price")} {price_perf.prices[0]}$"
+                f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}$"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}$"
+                f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}$"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
+                f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
             )
             md.append(f"![Grafik performansi cene]({graph_path})\n")
 
-        md.append(f"### {self.localization.translate("price_perf_worst")}\n")
+        md.append(f"### {self._localization.translate("price_perf_worst")}\n")
         for price_perf in price_perf_data["losers"]:
-            graph_path = self.graph_builder.build_price_graph(
+            graph_path = self.__graph_builder.build_price_graph(
                 price_perf.prices, price_perf.ticker
             )
 
@@ -68,13 +63,13 @@ class PricePerformanceBuilder(ReportBuilder):
                 f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_old_price")} {price_perf.prices[0]}"
+                f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}"
+                f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}"
             )
             md.append(
-                f"- {self.localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
+                f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
             )
             md.append(f"![Grafik performansi cene]({graph_path})\n")
 

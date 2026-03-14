@@ -34,20 +34,20 @@ class YahooEarningsProvider(EarningsProvider):
             try:
                 stock = yf.Ticker(ticker)
 
-                calendar = self._get_stock_calendar(stock)
+                calendar = self.__get_stock_calendar(stock)
                 if not calendar:
                     continue
 
-                earnings_date = self._get_earnings_date(calendar, cutoff)
+                earnings_date = self.__get_earnings_date(calendar, cutoff)
                 if earnings_date is None:
                     continue
 
-                company_name = self._get_company_name(stock)
-                market_cap = self._get_market_cap(stock)
-                eps = self._get_eps(calendar)
-                revenue = self._get_revenue(calendar)
-                price_last_15_days = self._get_price_last_15_days(stock)
-                prev_earnings = self._get_previous_earnings(stock)
+                company_name = self.__get_company_name(stock)
+                market_cap = self.__get_market_cap(stock)
+                eps = self.__get_eps(calendar)
+                revenue = self.__get_revenue(calendar)
+                price_last_15_days = self.__get_price_last_15_days(stock)
+                prev_earnings = self.__get_previous_earnings(stock)
 
                 result.append(
                     EarningsInformation(
@@ -67,7 +67,7 @@ class YahooEarningsProvider(EarningsProvider):
                 continue
         return result
 
-    def _get_stock_calendar(self, stock: yf.Ticker) -> dict | None:
+    def __get_stock_calendar(self, stock: yf.Ticker) -> dict | None:
         """Get the stock calendar that contains all useful information."""
         try:
             calendar = stock.calendar
@@ -76,7 +76,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching calendar for stock: {e}")
             return None
 
-    def _get_earnings_date(self, calendar: dict, cutoff: datetime) -> datetime | None:
+    def __get_earnings_date(self, calendar: dict, cutoff: datetime) -> datetime | None:
         """Get the date of the first upcoming earnings report for a company.
 
         Returns a date only if it is sooner that cutoff time."""
@@ -91,7 +91,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching earnings date from calendar: {e}")
             return None
 
-    def _get_company_name(self, stock: yf.Ticker) -> str:
+    def __get_company_name(self, stock: yf.Ticker) -> str:
         """Returns a name of the company based on ticker."""
         try:
             info = stock.info or {}
@@ -101,7 +101,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching company name: {e}")
             return ""
 
-    def _get_market_cap(self, stock: yf.Ticker) -> int:
+    def __get_market_cap(self, stock: yf.Ticker) -> int:
         """Returns the market cap of a company."""
         try:
             info = stock.info or {}
@@ -111,7 +111,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching market cap: {e}")
             return 0
 
-    def _get_eps(self, calendar: dict) -> EpsInformation | None:
+    def __get_eps(self, calendar: dict) -> EpsInformation | None:
         """Returns EPS estimates for the next upcoming earnings report."""
         try:
             eps_avg = calendar.get("Earnings Average", None)
@@ -126,7 +126,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching EPS information: {e}")
             return None
 
-    def _get_revenue(self, calendar: dict) -> int:
+    def __get_revenue(self, calendar: dict) -> int:
         """Returns the revenue of the company."""
         try:
             revenue = calendar.get("Revenue Average", 0)
@@ -135,7 +135,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching revenue information: {e}")
             return 0
 
-    def _get_price_last_15_days(self, stock: yf.Ticker) -> list[float]:
+    def __get_price_last_15_days(self, stock: yf.Ticker) -> list[float]:
         """Returns the Closing price of a stock of the last 15 days."""
         try:
             hist = stock.history(period="15d")
@@ -146,7 +146,7 @@ class YahooEarningsProvider(EarningsProvider):
             logger.warning(f"Error fetching price history: {e}")
             return []
 
-    def _get_previous_earnings(
+    def __get_previous_earnings(
         self, stock: yf.Ticker
     ) -> list[PreviousEarningsInformation]:
         """Returns EPS information about the last 4 earnings."""

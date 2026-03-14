@@ -20,30 +20,15 @@ class EarningsManager:
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("EaringsManager initialized.")
-        self._days_ahead = days_ahead if days_ahead > 0 else 30
-        self._tickers: list[str] = tickers
+        self.__days_ahead = days_ahead if days_ahead > 0 else 30
+        self.__tickers: list[str] = tickers
         if provider == ProviderType.YAHOO:
-            self._provider: EarningsProvider = YahooEarningsProvider()
+            self.__provider: EarningsProvider = YahooEarningsProvider()
         else:
             logger.warning(
                 "Chose a non existent provider, initializing a default one..."
             )
-            self._provider: EarningsProvider = YahooEarningsProvider()
-
-    @property
-    def days_ahead(self) -> int:
-        """Getter for days_ahead."""
-        return self._days_ahead
-
-    @property
-    def tickers(self) -> list[str]:
-        """Getter for tickers."""
-        return self._tickers
-
-    @property
-    def provider(self) -> EarningsProvider:
-        """Getter for provider."""
-        return self._provider
+            self.__provider: EarningsProvider = YahooEarningsProvider()
 
     def get_latest_upcoming_earnings(
         self, number_of_companies: int
@@ -59,8 +44,8 @@ class EarningsManager:
         logger.debug(
             f"Fetching latest upcoming earnings for {number_of_companies} companies."
         )
-        cutoff = datetime.today().date() + timedelta(days=self.days_ahead)
-        earnings = self.provider.fetch_earnings(self.tickers, cutoff=cutoff)
+        cutoff = datetime.today().date() + timedelta(days=self.__days_ahead)
+        earnings = self.__provider.fetch_earnings(self.__tickers, cutoff=cutoff)
         earnings = [e for e in earnings if e is not None and e.date is not None]
         earnings.sort(key=lambda e: e.date)
         return earnings[:number_of_companies]

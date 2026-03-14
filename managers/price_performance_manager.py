@@ -21,28 +21,13 @@ class PricePerformanceManager:
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("PricePerformanceManager initialized.")
-        self._days_behind = days_behind if days_behind > 0 else 180
-        self._tickers: list[str] = tickers
+        self.__days_behind = days_behind if days_behind > 0 else 180
+        self.__tickers: list[str] = tickers
         if provider == ProviderType.YAHOO:
-            self._provider = YahooPricePerformanceProvider()
+            self.__provider = YahooPricePerformanceProvider()
         else:
             logger.warning("Chose a non existent provider, using a default one...")
-            self._provider = YahooPricePerformanceProvider()
-
-    @property
-    def days_behind(self) -> int:
-        """Getter for days_behind."""
-        return self._days_behind
-
-    @property
-    def tickers(self) -> list[str]:
-        """Getter for tickers."""
-        return self._tickers
-
-    @property
-    def provider(self):
-        """Getter for provider."""
-        return self._provider
+            self.__provider = YahooPricePerformanceProvider()
 
     def get_best_worst_price_performance(
         self, number_of_companies: int
@@ -63,8 +48,8 @@ class PricePerformanceManager:
         logger.debug(
             f"Fetching best and worst price performance for {number_of_companies} companies."
         )
-        performances = self.provider.fetch_price_performance(
-            self.tickers, self.days_behind
+        performances = self.__provider.fetch_price_performance(
+            self.__tickers, self.__days_behind
         )
         performances.sort(key=lambda p: p.percent_change, reverse=True)
 

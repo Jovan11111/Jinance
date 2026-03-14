@@ -21,6 +21,8 @@ class YahooInsiderProvider(InsiderProvider):
         Returns:
             list[InsiderInformation]: List of relevant insider trading information.
         """
+        logger.debug("Fetching all insider information by using Yahoo Finance API.")
+
         insider_info: list[InsiderInformation] = []
         for ticker in tickers:
             try:

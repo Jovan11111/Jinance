@@ -13,7 +13,7 @@ class AnalystBuilder(ReportBuilder):
 
     def __init__(self, localization: Localization):
         logger.debug("AnalystBuilder initialized.")
-        self.localization = localization
+        super().__init__(localization)
 
     def build_markdown(
         self, analyst_recommendations: Dict[str, list[AnalystRecommendation]]
@@ -29,14 +29,14 @@ class AnalystBuilder(ReportBuilder):
 
         logger.debug("Building analyst recommendations markdown report part.")
         md: list[str] = []
-        md.append(f"## {self.localization.translate("analyst_title")}\n")
-        md.append(f"{self.localization.translate("analyst_intro")}\n")
+        md.append(f"## {self._localization.translate("analyst_title")}\n")
+        md.append(f"{self._localization.translate("analyst_intro")}\n")
 
         buys = analyst_recommendations["buy"]
         sells = analyst_recommendations["sell"]
-        md.append(f"### {self.localization.translate("analyst_sells")}\n")
+        md.append(f"### {self._localization.translate("analyst_sells")}\n")
         md.append(
-            f"| # | {self.localization.translate("analyst_ticker")} | {self.localization.translate("analyst_index")}  |"
+            f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
         )
         md.append("|---|--------|-----------------------|")
         for i, recommendation in enumerate(sells, start=1):
@@ -46,9 +46,9 @@ class AnalystBuilder(ReportBuilder):
             md.append(f"| {i} | {ticker} | {index_str} |")
         md.append("\n")
 
-        md.append(f"### {self.localization.translate("analyst_buys")}\n")
+        md.append(f"### {self._localization.translate("analyst_buys")}\n")
         md.append(
-            f"| # | {self.localization.translate("analyst_ticker")} | {self.localization.translate("analyst_index")}  |"
+            f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
         )
         md.append("|---|--------|-----------------------|")
         for i, recommendation in enumerate(buys, start=1):

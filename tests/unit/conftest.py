@@ -13,7 +13,6 @@ from models.insider_information import InsiderInformation
 from models.news_article import NewsArticle
 from models.previous_earnings_information import PreviousEarningsInformation
 from models.price_performance_information import PricePerformanceInformation
-from models.report_information import ReportInformation
 from utils.enums.trade_type import TradeType
 
 # --------------------------------------------------------------------------------------
@@ -141,24 +140,6 @@ def fixture_create_false_earnings_information(
         revenue=-1234567,
         previous_earnings=[],
     )
-
-
-@pytest.fixture(name="create_report_info", scope="function")
-def fixture_create_report_info(
-    create_earn_info: EarningsInformation,
-    create_news_article: NewsArticle,
-    create_price_perf_dict: Dict[str, list[PricePerformanceInformation]],
-    create_aggregated_insider_information_dict: Dict[str, list[AggregatedInsiderInfo]],
-    create_analyst_recommendation_dict: Dict[str, list[AnalystRecommendation]],
-) -> ReportInformation:
-    ei1 = create_earn_info
-    ei2 = create_earn_info
-    na1 = create_news_article
-    na2 = create_news_article
-    pp = create_price_perf_dict
-    ai = create_aggregated_insider_information_dict
-    ar = create_analyst_recommendation_dict
-    return ReportInformation([ei1, ei2], [na1, na2], pp, ai, ar)
 
 
 # --------------------------------------------------------------------------------------

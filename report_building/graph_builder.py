@@ -16,15 +16,15 @@ class GraphBuilder(metaclass=SingletonMeta):
 
     def __init__(self, localization: Localization, output_dir="graphs"):
         logger.debug("GraphBuilder initialized.")
-        self.output_dir = output_dir
-        self._clear_graph_folder()
-        self.localization = localization
+        self.__output_dir = output_dir
+        self.__clear_graph_folder()
+        self.__localization = localization
 
-    def _clear_graph_folder(self):
+    def __clear_graph_folder(self):
         """Deletes old graphs."""
-        if os.path.exists(self.output_dir):
-            shutil.rmtree(self.output_dir)
-        os.makedirs(self.output_dir, exist_ok=True)
+        if os.path.exists(self.__output_dir):
+            shutil.rmtree(self.__output_dir)
+        os.makedirs(self.__output_dir, exist_ok=True)
 
     def build_price_graph(self, prices: list[float], ticker: str) -> str:
         """Creates a graph that represents the change of price of a given company.
@@ -70,12 +70,12 @@ class GraphBuilder(metaclass=SingletonMeta):
         margin = (max_p - min_p) * 0.1 or max(1.0, abs(max_p) * 0.01)
         plt.ylim(min_p - margin, max_p + margin)
 
-        plt.xlabel(f"{self.localization.translate("graph_days")}")
-        plt.ylabel(f"{self.localization.translate("graph_price")}")
+        plt.xlabel(f"{self.__localization.translate("graph_days")}")
+        plt.ylabel(f"{self.__localization.translate("graph_price")}")
         plt.grid(True)
 
         path = os.path.join(
-            self.output_dir, f"{ticker}_{datetime.now():%Y%m%d_%H%M%S}.png"
+            self.__output_dir, f"{ticker}_{datetime.now():%Y%m%d_%H%M%S}.png"
         )
 
         plt.tight_layout()

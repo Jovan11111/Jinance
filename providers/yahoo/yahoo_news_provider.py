@@ -26,7 +26,7 @@ class YahooNewsProvider(NewsProvider):
             f"Fetching all news in the last {days_behind} days using Yahoo Finance API."
         )
         result: list[NewsArticle] = []
-        limit = self._news_limit(days_behind)
+        limit = self.__news_limit(days_behind)
 
         for ticker in tickers:
             stock = yf.Ticker(ticker)
@@ -45,7 +45,7 @@ class YahooNewsProvider(NewsProvider):
 
         return result
 
-    def _news_limit(self, days_behind: int) -> int:
+    def __news_limit(self, days_behind: int) -> int:
         """Yahoo finance API for fetching news doesn't takes an argument limit which says how many articles it should return.
         This method returns estimated limit based on days_behind parameter."""
         if days_behind == 1:

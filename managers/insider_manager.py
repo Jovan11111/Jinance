@@ -21,30 +21,15 @@ class InsiderManager:
         tickers=constants.TICKERS_SP_100,
     ):
         logger.debug("InsiderManager initialized.")
-        self._tickers = tickers
-        self._filter = InsiderInfoFilter(days_behind=days_behind)
+        self.__tickers = tickers
+        self.__filter = InsiderInfoFilter(days_behind=days_behind)
         if provider == ProviderType.YAHOO:
-            self._provider = YahooInsiderProvider()
+            self.__provider = YahooInsiderProvider()
         else:
             logger.warning(
                 "Chose a non existent provider, initializing a default one..."
             )
-            self._provider = YahooInsiderProvider()
-
-    @property
-    def tickers(self) -> list[str]:
-        """Getter for tickers list."""
-        return self._tickers
-
-    @property
-    def provider(self) -> YahooInsiderProvider:
-        """Getter for insider provider."""
-        return self._provider
-
-    @property
-    def filter(self) -> InsiderInfoFilter:
-        """Getter for insider info filter."""
-        return self._filter
+            self.__provider = YahooInsiderProvider()
 
     def get_insider_trades(
         self, number_of_companies: int
@@ -65,8 +50,8 @@ class InsiderManager:
         logger.debug(
             f"Fetching insider trading data for {number_of_companies} companies."
         )
-        insider_trades = self.provider.fetch_insider_trades(self.tickers)
-        filtered_insider_trades = self.filter.filter_insider_info(insider_trades)
+        insider_trades = self.__provider.fetch_insider_trades(self.__tickers)
+        filtered_insider_trades = self.__filter.filter_insider_info(insider_trades)
 
         ticker_aggregation: Dict[str, Dict[str, int]] = {}
         for trade in filtered_insider_trades:

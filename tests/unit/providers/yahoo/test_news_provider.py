@@ -8,10 +8,10 @@ class TestYahooNewsProvider:
     def test__news_limit__returns_correct_limits(self):
         provider = YahooNewsProvider()
 
-        assert provider._news_limit(1) == 150
-        assert provider._news_limit(2) == 300
-        assert provider._news_limit(5) == 1000
-        assert provider._news_limit(10) == 1000
+        assert provider.__news_limit(1) == 150
+        assert provider.__news_limit(2) == 300
+        assert provider.__news_limit(5) == 1000
+        assert provider.__news_limit(10) == 1000
 
     def test__fetch_news_multiple_tickers__returns_all_news(self, mock_yf_ticker_news):
         mock_stock_1 = MagicMock()

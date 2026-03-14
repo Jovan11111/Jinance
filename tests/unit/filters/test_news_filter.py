@@ -11,7 +11,7 @@ class TestNewsFilter:
     ):
         """Test filtering by publication date."""
         news_filter = NewsFilter()
-        filtered = news_filter._filter_by_pub_date(sample_news_articles, days_behind=5)
+        filtered = news_filter.__filter_by_pub_date(sample_news_articles, days_behind=5)
         assert len(filtered) == 4
 
     def test__filter_by_seen_urls__return_8_news_with_unique_urls(
@@ -19,7 +19,7 @@ class TestNewsFilter:
     ):
         """Test filtering by seen URLs."""
         news_filter = NewsFilter()
-        filtered = news_filter._filter_by_seen_urls(sample_news_articles)
+        filtered = news_filter.__filter_by_seen_urls(sample_news_articles)
         assert len(filtered) == 8
 
     def test__filter_by_keywords__return_4_news_with_keywords_in_title(
@@ -27,7 +27,7 @@ class TestNewsFilter:
     ):
         """Test filtering by keywords."""
         news_filter = NewsFilter()
-        filtered = news_filter._filter_by_keywords(sample_news_articles)
+        filtered = news_filter.__filter_by_keywords(sample_news_articles)
         assert len(filtered) == 4
 
     def test__filter_by_ticker_in_title__return_9_news_with_ticker_in_title(
@@ -35,7 +35,7 @@ class TestNewsFilter:
     ):
         """Test filtering by ticker in title."""
         news_filter = NewsFilter()
-        filtered = news_filter._filter_by_ticker_in_title(sample_news_articles)
+        filtered = news_filter.__filter_by_ticker_in_title(sample_news_articles)
         assert len(filtered) == 9
 
     def test__filter_news_integration__return_2_news_that_meet_all_criteria(

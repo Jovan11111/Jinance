@@ -18,24 +18,14 @@ class AnalystManager:
         tickers: list[str] = constants.TICKERS_SP_100,
     ):
         logger.debug("AnalystManager initialized.")
-        self._tickers = tickers
+        self.__tickers = tickers
         if provider == ProviderType.YAHOO:
-            self._provider = YahooAnalystProvider()
+            self.__provider = YahooAnalystProvider()
         else:
             logger.warning(
                 "Chose a non existent provider, initializing a default one..."
             )
-            self._provider = YahooAnalystProvider()
-
-    @property
-    def tickers(self) -> list[str]:
-        """Getter for tickers list."""
-        return self._tickers
-
-    @property
-    def provider(self) -> YahooAnalystProvider:
-        """Getter for analyst provider."""
-        return self._provider
+            self.__provider = YahooAnalystProvider()
 
     def get_analyst_recommendations(
         self, number_of_companies: int
@@ -55,7 +45,7 @@ class AnalystManager:
             f"Fetching analyst recommendations for {number_of_companies} companies."
         )
 
-        recommendations = self.provider.fetch_analyst_recommendations(self.tickers)
+        recommendations = self.__provider.fetch_analyst_recommendations(self.__tickers)
         sorted_recommendations = sorted(
             recommendations, key=lambda x: x.index, reverse=True
         )

@@ -12,7 +12,7 @@ class NewsBuilder(ReportBuilder):
 
     def __init__(self, localization: Localization):
         logger.debug("NewsBuilder initialized.")
-        self.localization = localization
+        super().__init__(localization)
 
     def build_markdown(self, news_data: list[NewsArticle]) -> str:
         """Returns .md formatted report part that includes all given news information.
@@ -26,13 +26,13 @@ class NewsBuilder(ReportBuilder):
         logger.debug("Building news markdown report part.")
         md: list[str] = []
 
-        md.append(f"## {self.localization.translate("news_title")}\n")
-        md.append(f"{self.localization.translate("news_intro")}\n")
+        md.append(f"## {self._localization.translate("news_title")}\n")
+        md.append(f"{self._localization.translate("news_intro")}\n")
 
         for article in news_data:
             md.append(f"### [{article.title}]({article.url}) - {article.ticker}\n")
             md.append(
-                f"{self.localization.translate("news_date")}: {article.pub_time.strftime('%d.%m.%Y %H:%M')}\n"
+                f"{self._localization.translate("news_date")}: {article.pub_time.strftime('%d.%m.%Y %H:%M')}\n"
             )
             md.append(f"{article.summary}\n")
             md.append("---\n")

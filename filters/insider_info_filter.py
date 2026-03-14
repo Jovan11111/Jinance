@@ -12,28 +12,25 @@ class InsiderInfoFilter:
 
     def __init__(self, days_behind: int):
         logger.debug("InsiderInfoFilter initialized.")
-        self._cutoff = datetime.now() - timedelta(days=days_behind)
-
-    @property
-    def cutoff(self) -> datetime:
-        """Getter for cutoff date."""
-        return self._cutoff
+        self.__cutoff = datetime.now() - timedelta(days=days_behind)
 
     def filter_insider_info(
         self, raw_insider_info: list[InsiderInformation]
     ) -> list[InsiderInformation]:
-        recent_insider_info = self._filter_by_recency(raw_insider_info)
-        non_gift_insider_info = self._filter_by_only_non_gifts(recent_insider_info)
+        recent_insider_info = self.__filter_by_recency(raw_insider_info)
+        non_gift_insider_info = self.__filter_by_only_non_gifts(recent_insider_info)
         return non_gift_insider_info
 
-    def _filter_by_recency(
+    def __filter_by_recency(
         self, raw_insider_info: list[InsiderInformation]
     ) -> list[InsiderInformation]:
         """Remove insider information older than cutoff date."""
-        return [trade for trade in raw_insider_info if trade.date >= self.cutoff]
+        logger.debug("Filtering insider info by recency.")
+        return [trade for trade in raw_insider_info if trade.date >= self.__cutoff]
 
-    def _filter_by_only_non_gifts(
+    def __filter_by_only_non_gifts(
         self, raw_insider_info: list[InsiderInformation]
     ) -> list[InsiderInformation]:
         """Remove all insider information about gifts (value = 0)."""
+        logger.debug("Filtering out gift insider trades.")
         return [trade for trade in raw_insider_info if trade.type != TradeType.GIFT]

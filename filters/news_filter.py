@@ -13,13 +13,8 @@ class NewsFilter:
 
     def __init__(self):
         logger.debug("NewsFilter initialized.")
-        self._seen_urls = set()
-        self.ai_service: AiService = AiService.get_instance()
-
-    @property
-    def seen_urls(self) -> set:
-        """Getter for seen URLs set."""
-        return self._seen_urls
+        self.__seen_urls = set()
+        self.__ai_service: AiService = AiService.get_instance()
 
     def filter_news(
         self, raw_news: list[NewsArticle], top_k: int, days_behind: int
@@ -35,32 +30,32 @@ class NewsFilter:
             list[NewsArticle]: List of filtered news articles
         """
         logger.debug("Starting news filtering process.")
-        no_old_news = self._filter_by_pub_date(raw_news, days_behind)
-        no_seen_urls = self._filter_by_seen_urls(no_old_news)
-        with_keywords = self._filter_by_keywords(no_seen_urls)
-        with_ticker_in_title = self._filter_by_ticker_in_title(with_keywords)
-        ai_filtered_dicts = self.ai_service.filter_news(with_ticker_in_title, top_k)
+        no_old_news = self.__filter_by_pub_date(raw_news, days_behind)
+        no_seen_urls = self.__filter_by_seen_urls(no_old_news)
+        with_keywords = self.__filter_by_keywords(no_seen_urls)
+        with_ticker_in_title = self.__filter_by_ticker_in_title(with_keywords)
+        ai_filtered_dicts = self.__ai_service.filter_news(with_ticker_in_title, top_k)
         return ai_filtered_dicts
 
-    def _filter_by_pub_date(
+    def __filter_by_pub_date(
         self, raw_news: list[NewsArticle], days_behind: int
     ) -> list[NewsArticle]:
         """Filter out news articles older than cutoff date."""
         logger.debug("Filtering news by publication date.")
-        cutoff = self._time_cutoff(days_behind)
+        cutoff = self.__time_cutoff(days_behind)
         return [article for article in raw_news if article.pub_time >= cutoff]
 
-    def _filter_by_seen_urls(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
+    def __filter_by_seen_urls(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
         """Filter out news articles with same URLs"""
         logger.debug("Filtering news by seen URLs.")
         filtered_news = []
         for article in raw_news:
-            if article.url not in self.seen_urls:
+            if article.url not in self.__seen_urls:
                 filtered_news.append(article)
-                self.seen_urls.add(article.url)
+                self.__seen_urls.add(article.url)
         return filtered_news
 
-    def _filter_by_keywords(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
+    def __filter_by_keywords(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
         """Filter out news articles that do not contain hard event keywords."""
         logger.debug("Filtering news by hard event keywords.")
         filtered_news = []
@@ -70,7 +65,7 @@ class NewsFilter:
                 filtered_news.append(article)
         return filtered_news
 
-    def _filter_by_ticker_in_title(
+    def __filter_by_ticker_in_title(
         self, raw_news: list[NewsArticle]
     ) -> list[NewsArticle]:
         """Filter out news articles that do not mention ticker or company name in title."""
@@ -84,6 +79,6 @@ class NewsFilter:
                 filtered_news.append(article)
         return filtered_news
 
-    def _time_cutoff(self, days_behind) -> datetime:
+    def __time_cutoff(self, days_behind) -> datetime:
         """Return datetime object representing cutoff date."""
         return datetime.now(timezone.utc) - timedelta(days=days_behind)
