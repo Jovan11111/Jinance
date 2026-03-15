@@ -35,7 +35,7 @@ class ReportBuilderDirector:
         self.__localization = Localization(language)
 
     def __build_markdown(self, section_data: list[SectionData]) -> str:
-        """Creates a whole report in .md format by calling all other builders it contains."""
+        """Creates a whole report in .md format by calling all sections it contains."""
         logger.debug("Building markdown content for the report.")
         today = date.today().strftime("%d.%m.%Y")
 
@@ -53,8 +53,7 @@ class ReportBuilderDirector:
         """Creates a pdf report that is a final produce of the whole application.
 
         Args:
-            earnings_data (list[EarningsInformation]): Data about earnings that is supposed to be represented.
-            news_data (list[NewsArticle]): Data about news that is supposed to be represented.
+            section_data (list[SectionData]): Information about sections that are supposed to be in the report.
 
         Returns:
             str: path to a pdf report that is created and saved.

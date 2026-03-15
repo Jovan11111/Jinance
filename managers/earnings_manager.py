@@ -33,10 +33,10 @@ class EarningsManager:
     def get_latest_upcoming_earnings(
         self, number_of_companies: int
     ) -> list[EarningsInformation]:
-        """Returns specified number of latest upcoming earnings reports
+        """Returns specified number of latest upcoming earnings reports.
 
         Args:
-            number_of_companies (_type_): Number of companies to return
+            number_of_companies (int): Number of earnings to return.
 
         Returns:
             list[EarningsInformation]: List of EarningsInformation objects that contain earnings data.

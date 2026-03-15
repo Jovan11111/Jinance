@@ -2,6 +2,8 @@ from utils.enums.language import Language
 
 
 class Localization:
+    """Class responsible for translating report to different languages."""
+
     def __init__(self, language: Language):
         self.__language = language
         self.__translations = {

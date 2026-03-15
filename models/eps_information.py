@@ -1,5 +1,11 @@
 class EpsInformation:
-    """Class that represents needed Earnings Per Share information."""
+    """Class that represents needed Earnings Per Share information.
+
+    Fields:
+        avg (float): Average earnings per share expectation.
+        low (float): Pessimistic earnings per share expectation.
+        high (float): Optimistic earnings per share expectation.
+    """
 
     def __init__(self, avg: float, low: float, high: float):
         self.__avg = avg

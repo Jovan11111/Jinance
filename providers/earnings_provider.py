@@ -14,8 +14,8 @@ class EarningsProvider(ABC):
         """Return relevant future earnings data.
 
         Args:
-            tickers (list[str]): List of tickers for which to check if there is an upcoming earnings report
-            cutoff (datetime): Cutoff time for how away a report can be
+            tickers (list[str]): List of tickers for which to check if there is an upcoming earnings report.
+            cutoff (datetime): Cutoff time for how away a report can be.
 
         Returns:
             list[EarningsInformation]: List of relevant Earnings information.

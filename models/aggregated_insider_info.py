@@ -1,4 +1,12 @@
 class AggregatedInsiderInfo:
+    """Class that represents a data model for aggregated insider information.
+
+    Fields:
+        ticker (str): Ticker of the company the insider info is about.
+        bought (float): Amount of money for which the insiders bought stocks for this company.
+        sold (float): Amount of money for which the insiders sold stocks for this company.
+    """
+
     def __init__(self, ticker: str, bought: float, sold: float):
         self.__ticker = ticker
         self.__bought = bought if bought >= 0 else 0

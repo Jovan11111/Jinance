@@ -2,7 +2,15 @@ import datetime
 
 
 class NewsArticle:
-    """Class that represents information about News articles that are in the report."""
+    """Class that represents information about News articles that are in the report.
+
+    Fields:
+        ticker (str): Ticker of the company the article is about.
+        title (str): Title of the article.
+        summary (str): Summary of the article.
+        pub_time (datetime): Time at which the article was published.
+        url (str): Link to the article.
+    """
 
     def __init__(
         self, title: str, summary: str, pub_time: datetime, url: str, ticker: str

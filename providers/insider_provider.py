@@ -11,8 +11,8 @@ class InsiderProvider(ABC):
         """Return relevant insider trading data.
 
         Args:
-            tickers (list[str]): List of tickers for which to check if there are any recent insider trades
-            days_behind (int): How old can an insider trade be to be included
+            tickers (list[str]): List of tickers for which to check if there are any recent insider trades.
+            days_behind (int): How old can an insider trade be to be included.
         Returns:
             list[InsiderInformation]: List of relevant insider trading information.
         """

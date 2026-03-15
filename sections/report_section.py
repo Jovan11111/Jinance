@@ -8,7 +8,7 @@ class ReportSection(ABC):
     def generate(self) -> str:
         """Generate a part of the report
 
-        Method that generates a part of the report based on which part is supposd to be generated.
+        Method that generates a part of the report based on which part is supposed to be generated.
         Uses manager to get the data and builder to generate the .md text.
         Returns:
             str: content of the report in .md format.

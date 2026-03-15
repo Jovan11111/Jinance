@@ -16,7 +16,7 @@ class YahooInsiderProvider(InsiderProvider):
         """Get all insider trades posted on yahoo finance.
 
         Args:
-            tickers (list[str]): Tickers for which to check insider trades
+            tickers (list[str]): Tickers for which to check insider trades.
 
         Returns:
             list[InsiderInformation]: List of relevant insider trading information.

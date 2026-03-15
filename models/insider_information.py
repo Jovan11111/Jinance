@@ -4,7 +4,14 @@ from utils.enums.trade_type import TradeType
 
 
 class InsiderInformation:
-    """Class that represents information about insider trading that is in the report."""
+    """Class that represents information about a single insider trade.
+
+    Fields:
+        ticker (str): Ticker of the company the insider information is about.
+        value (float): Value of the insider trade.
+        type (TradeType): Shows if stock was bought or sold or given.
+        date (datetime): Date when the trade occurred.
+    """
 
     def __init__(
         self,

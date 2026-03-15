@@ -20,7 +20,12 @@ class NewsSection(ReportSection):
         self.__builder = NewsBuilder(Localization(section_data.language))
         self.__number_of_articles = section_data.number_of_companies
 
-    def generate(self):
+    def generate(self) -> str:
+        """Generate part of the report about latest news based on received data.
+
+        Returns:
+            str: .md formatted string containing the report part.
+        """
         logger.debug("Generating News section of the report.")
         news_data = self.__manager.get_latest_news(self.__number_of_articles)
         return self.__builder.build_markdown(news_data)

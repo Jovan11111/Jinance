@@ -22,12 +22,12 @@ class NewsFilter:
         """Main method that filters all news articles on various criteria.
 
         Args:
-            raw_news (list[NewsArticle]): all provided news articles
-            top_k (int): number of articles to return
-            days_behind (int): latest publication date cutoff in days
+            raw_news (list[NewsArticle]): All provided news articles.
+            top_k (int): Number of articles to return.
+            days_behind (int): Latest publication date cutoff in days.
 
         Returns:
-            list[NewsArticle]: List of filtered news articles
+            list[NewsArticle]: List of filtered news articles.
         """
         logger.debug("Starting news filtering process.")
         no_old_news = self.__filter_by_pub_date(raw_news, days_behind)
@@ -46,7 +46,7 @@ class NewsFilter:
         return [article for article in raw_news if article.pub_time >= cutoff]
 
     def __filter_by_seen_urls(self, raw_news: list[NewsArticle]) -> list[NewsArticle]:
-        """Filter out news articles with same URLs"""
+        """Filter out news articles with same URLs."""
         logger.debug("Filtering news by seen URLs.")
         filtered_news = []
         for article in raw_news:

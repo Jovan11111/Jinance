@@ -21,7 +21,7 @@ class PricePerformanceBuilder(ReportBuilder):
     def build_markdown(
         self, price_perf_data: Dict[str, list[PricePerformanceInformation]]
     ) -> str:
-        """Returns .md formatted string that includes price performance information about winners and losers
+        """Returns .md formatted string that includes price performance information about winners and losers.
 
         Args:
             price_perf_data (list[PricePerformanceInformation]): Information about price performance that needs to be represented.

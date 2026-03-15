@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class Jinance(metaclass=SingletonMeta):
-    """Main facade class of the application that manages all data, sends it to report builders."""
+    """Main facade class of the application that manages a config file, and sends section data to report builder."""
 
     def __init__(self):
         setup_logging()

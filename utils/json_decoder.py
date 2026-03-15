@@ -13,9 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 class JsonDecoder:
+    """Class used for decoding a .json config file."""
 
     @staticmethod
     def decode(path_to_json_file: Path) -> list[SectionData]:
+        """Decode the config .json file to section data models.
+
+        Args:
+            path_to_json_file (Path): Path to config file.
+
+        Returns:
+            list[SectionData]: List of section data models that contain information for the config file.
+        """
         logger.debug("Decoding .json config file.")
         with open(path_to_json_file, "r", encoding="utf-8") as f:
             data = json.load(f)

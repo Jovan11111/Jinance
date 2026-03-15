@@ -6,6 +6,18 @@ from utils.enums.section_type import SectionType
 
 
 class SectionData:
+    """Class that represents a data model sent to each section to instantiate managers and builders with correct parameters.
+
+    Fields:
+        type (SectionType): Type of the section that is being instantiated.
+        language (Language): Language in which that part of the report is generated in.
+        provider (ProviderType): Type of provider for data shown in the report.
+        tickers (list[str]): Lits of ticker from which to retrieve data for that part of the report.
+        days_ahead (Optional[int]): How far into the future the manager should look. Optional since some managers don't have this.
+        days_behind (Optional[int]): How far into the past the manager should look. Optional since some managers don't have this.
+        number_of_companies (int): Number of companies/articles that should be shown in that part of the report.
+    """
+
     def __init__(
         self,
         type: SectionType,

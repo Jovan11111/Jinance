@@ -1,4 +1,11 @@
 class AnalystRecommendation:
+    """Class that represents the data model for Analyst recommendation.
+
+    Fields:
+        ticker (str): Ticker of the company the recommendation is about.
+        index (float): number between -100 and 100, where -100 means strong sell, and 100 means strong buy.
+    """
+
     def __init__(self, ticker: str, index: float):
         self.__ticker = ticker
         self.__index = index if index >= -100 and index <= 100 else 0

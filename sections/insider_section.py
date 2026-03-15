@@ -20,7 +20,12 @@ class InsiderSection(ReportSection):
         self.__builder = InsiderBuilder(Localization(section_data.language))
         self.__number_of_companies = section_data.number_of_companies
 
-    def generate(self):
+    def generate(self) -> str:
+        """Generate part of the report about insider trades based on received data.
+
+        Returns:
+            str: .md formatted string containing the report part.
+        """
         logger.debug("Generating Insider trading section of the report.")
         insider_data = self.__manager.get_insider_trades(self.__number_of_companies)
         return self.__builder.build_markdown(insider_data)

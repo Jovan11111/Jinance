@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class YahooPricePerformanceProvider(PricePerformanceProvider):
+    """Class that provides prices of stocks in a given period by using yahoo finance API."""
 
     def fetch_price_performance(
         self, tickers: list[str], days_behind: int

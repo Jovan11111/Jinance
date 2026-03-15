@@ -5,7 +5,18 @@ from models.previous_earnings_information import PreviousEarningsInformation
 
 
 class EarningsInformation:
-    """Dataclass that represents earnings information that is to be displayed."""
+    """Dataclass that represents earnings information that is to be displayed.
+
+    Fields:
+        ticker (str): Ticker of the company the earnings information is about.
+        name (str): Name of the company the earning information is about.
+        value_last_15_days (list[float]): Value of the company in the last 15 days.
+        market_cap (int): Market cap of the company.
+        eps (EpsInformation): Estimated earnings per share of the company.
+        date (datetime): Date of the earnings report.
+        revenue (int): Revenue of the company.
+        previous_earnings (list[PreviousEarningsInformation]): List of previous 4 earnings, their expected and actual EPS.
+    """
 
     def __init__(
         self,

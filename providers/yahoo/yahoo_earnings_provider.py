@@ -17,10 +17,10 @@ class YahooEarningsProvider(EarningsProvider):
     def fetch_earnings(
         self, tickers: list[str], cutoff: datetime
     ) -> list[EarningsInformation]:
-        """Return relevant Earnings report information for given companies.
+        """Return relevant Earnings report information for given companies by using yahoo finance API.
 
         Args:
-            tickers (list[str]): List of ticker for which to check if there is an upcoming earnings report.
+            tickers (list[str]): List of tickers for which to check if there is an upcoming earnings report.
             cutoff (datetime): How far into the future a report can't be to be included.
 
         Returns:

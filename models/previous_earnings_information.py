@@ -1,5 +1,11 @@
 class PreviousEarningsInformation:
-    """Class that represents relevant information about previous earnings report."""
+    """Class that represents relevant information about previous earnings report.
+
+    Fields:
+        expected_eps (float): EPS that was expected for that earnings.
+        actual_eps (float): Actual EPS that was published for that earnings.
+        price_diff (float): How much the price changed between 5 days before and 10 days after the earnings.
+    """
 
     def __init__(self, expected_eps: float, actual_eps: float, price_diff: float):
         self.__expected_eps = expected_eps

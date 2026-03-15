@@ -20,7 +20,12 @@ class PricePerformanceSection(ReportSection):
         self.__builder = PricePerformanceBuilder(Localization(section_data.language))
         self.__number_of_companies = section_data.number_of_companies
 
-    def generate(self):
+    def generate(self) -> str:
+        """Generate part of the report about price performance based on received data.
+
+        Returns:
+            str: .md formatted string containing the report part.
+        """
         logger.debug("Generating Price performance section of the report.")
         price_perf_data = self.__manager.get_best_worst_price_performance(
             self.__number_of_companies

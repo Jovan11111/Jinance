@@ -13,14 +13,14 @@ class YahooNewsProvider(NewsProvider):
     """Class that provides data about news articles by using yahoo finance API."""
 
     def fetch_news(self, tickers: list[str], days_behind: int) -> list[NewsArticle]:
-        """Get all news articles posted on yahoo finance in the last **days_behind** days.
+        """Get all news articles posted on yahoo finance in the last {days_behind} days.
 
         Args:
-            tickers (list[str]): Tickers for which to check news articles
-            days_behind (int): How old can an article be to be included
+            tickers (list[str]): Tickers for which to check news articles.
+            days_behind (int): How old can an article be to be included.
 
         Returns:
-            list[NewsArticle]: List of articles that have been posted in the last **days_behind** days.
+            list[NewsArticle]: List of articles that have been posted in the last {days_behind} days.
         """
         logger.debug(
             f"Fetching all news in the last {days_behind} days using Yahoo Finance API."

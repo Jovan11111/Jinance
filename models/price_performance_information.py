@@ -1,5 +1,10 @@
 class PricePerformanceInformation:
-    """Class that represents price performance information for a given ticker."""
+    """Class that represents price performance information for a given ticker.
+
+    Fields:
+        ticker (str): Ticker of the company the price performance is about.
+        price (list[float]): List of prices in the last {number_of_days} days.
+    """
 
     def __init__(self, ticker: str, prices: list[float]):
         self.__ticker = ticker

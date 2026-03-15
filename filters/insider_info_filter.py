@@ -17,6 +17,14 @@ class InsiderInfoFilter:
     def filter_insider_info(
         self, raw_insider_info: list[InsiderInformation]
     ) -> list[InsiderInformation]:
+        """Filter insider trade info by leaving out old trades and gifts.
+
+        Args:
+            raw_insider_info (list[InsiderInformation]): Unfiltered insider info data.
+
+        Returns:
+            list[InsiderInformation]: Filtered insider info data.
+        """
         recent_insider_info = self.__filter_by_recency(raw_insider_info)
         non_gift_insider_info = self.__filter_by_only_non_gifts(recent_insider_info)
         return non_gift_insider_info

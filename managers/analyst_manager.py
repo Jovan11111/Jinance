@@ -30,7 +30,10 @@ class AnalystManager:
     def get_analyst_recommendations(
         self, number_of_companies: int
     ) -> Dict[str, list[AnalystRecommendation]]:
-        """Return list with number_of_companies top recommendations for buying and selling.
+        """Return list with {number_of_companies} top recommendations for buying and selling.
+
+        Args:
+            number_of_companies (int): Number of best and worst companies by analyst index to return.
 
         Returns:
             Dict[str, list[AnalystRecommendation]]: Keys are buy and sell, values are lists of analyst recommendations.

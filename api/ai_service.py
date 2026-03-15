@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class AiService(metaclass=SingletonMeta):
     """Class responsible for communicating with external AI API.
 
-    Chosen AI API is: GROQ, free model llama-3.1-8b-instant
+    Chosen AI API is: GROQ, free model llama-3.1-8b-instant.
     """
 
     GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -39,14 +39,14 @@ class AiService(metaclass=SingletonMeta):
     def filter_news(
         self, news: list[NewsArticle], top_k: int = 10
     ) -> list[NewsArticle]:
-        """Filters a list of news, and returns only those that could affect the market the most.
+        """Filter a list of news, and return only those that could affect the market the most.
 
         Args:
-            news (list[NewsArticle]): list of all news articles to filter
-            top_k (int, optional): Number of news that are left after filtering. Defaults to 10.
+            news (list[NewsArticle]): List of all news articles to filter.
+            top_k (int): Number of news that are left after filtering. Defaults to 10.
 
         Returns:
-            list[NewsArticle]: list of articles most likely to affect the market
+            list[NewsArticle]: List of articles most likely to affect the market.
         """
         logger.debug("Filtering news with AI.")
 
@@ -84,11 +84,11 @@ class AiService(metaclass=SingletonMeta):
         """Builds the prompt sent to the AI model.
 
         Args:
-            news (list[NewsArticle]): list of news articles to filter
-            top_k (int): Number of news that are left after filtering
+            news (list[NewsArticle]): List of news articles to filter.
+            top_k (int): Number of news that are left after filtering.
 
         Returns:
-            str: Prompt string
+            str: Prompt string.
         """
         logger.debug("Building prompt for AI model.")
         news_dicts = []
@@ -125,13 +125,13 @@ Articles:
         return prompt
 
     def __call_groq(self, prompt: str) -> str:
-        """Sends a request to an AI model
+        """Send a request to an AI model.
 
         Args:
-            prompt (str): Prompt to be sent
+            prompt (str): Prompt to be sent.
 
         Returns:
-            str: Response from the AI model
+            str: Response from the AI model.
         """
         logger.debug("Calling GROQ API.")
         payload = {
@@ -174,13 +174,13 @@ Articles:
     def __extract_json(self, text: str):
         """Extract JSON from the response from AI.
 
-        If non valid json is return, find a substring from 1st [ to last ]
+        If non valid json is returned, find a substring from 1st [ to last ]
 
         Args:
-            text (str): Reposnse from AI model
+            text (str): Response from AI model.
 
         Returns:
-            JSON formatted response or None if no valid JSON found
+            JSON formatted response or None if no valid JSON found.
         """
         try:
             return json.loads(text)
@@ -198,14 +198,14 @@ Articles:
         return None
 
     def __parse_response(self, response: str, summary_map: dict) -> list[NewsArticle]:
-        """Since AI doesn't know about internal data classes, parses the response to a list of NewsArticles
+        """Parse the response to a list of NewsArticles, since AI doesn't know about internal data classes.
 
         Args:
-            response (str): Response string from the AI model
-            summary_map (dict): Mapping of url -> summary to restore original summaries
+            response (str): Response string from the AI model.
+            summary_map (dict): Mapping of url -> summary to restore original summaries.
 
         Returns:
-            list[NewsArticle]: List of NewsArticle objects parsed from the response
+            list[NewsArticle]: List of NewsArticle objects parsed from the response.
         """
         data = self.__extract_json(response)
         if data is None:

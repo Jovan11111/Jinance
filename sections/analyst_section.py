@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class AnalystSection(ReportSection):
-    """Class reponsible for generating the analyst recommendations section of the report."""
+    """Class responsible for generating the analyst recommendations section of the report."""
 
     def __init__(self, section_data: SectionData):
         logger.debug("AnalystSection initialized.")
@@ -18,7 +18,12 @@ class AnalystSection(ReportSection):
         self.__builder = AnalystBuilder(Localization(section_data.language))
         self.__number_of_companies = section_data.number_of_companies
 
-    def generate(self):
+    def generate(self) -> str:
+        """Generate part of the report about analyst recommendations based on received data.
+
+        Returns:
+            str: .md formatted string containing the report part.
+        """
         logger.debug("Generating Analyst recommendations section of the report.")
         analyst_recommendations = self.__manager.get_analyst_recommendations(
             self.__number_of_companies

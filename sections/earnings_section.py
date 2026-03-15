@@ -21,6 +21,11 @@ class EarningsSection(ReportSection):
         self.__number_of_companies = section_data.number_of_companies
 
     def generate(self) -> str:
+        """Generate part of the report about earnings based on received data.
+
+        Returns:
+            str: .md formatted string containing the report part.
+        """
         logger.debug("Generating Earnings section of the report.")
         earnings_data = self.__manager.get_latest_upcoming_earnings(
             self.__number_of_companies
