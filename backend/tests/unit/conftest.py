@@ -13,6 +13,10 @@ from models.insider_information import InsiderInformation
 from models.news_article import NewsArticle
 from models.previous_earnings_information import PreviousEarningsInformation
 from models.price_performance_information import PricePerformanceInformation
+from models.section_data import SectionData
+from utils.enums.language import Language
+from utils.enums.provider_type import ProviderType
+from utils.enums.section_type import SectionType
 from utils.enums.trade_type import TradeType
 
 # --------------------------------------------------------------------------------------
@@ -142,6 +146,13 @@ def fixture_create_false_earnings_information(
     )
 
 
+@pytest.fixture(name="create_section_data", scope="function")
+def fixture_create_section_data() -> SectionData:
+    return SectionData(
+        SectionType.EARNINGS, Language.ENGLISH, ProviderType.YAHOO, ["TCK"], 1, 1, 1
+    )
+
+
 # --------------------------------------------------------------------------------------
 # Fixtures for creating lists of objects.
 # --------------------------------------------------------------------------------------
@@ -172,7 +183,7 @@ def fixture_create_earnings_info() -> list[EarningsInformation]:
 
 @pytest.fixture(name="create_news_info", scope="function")
 def fixture_create_news_info() -> list[NewsArticle]:
-    """Create a list of 15 news articles"""
+    """Create a list of 15 news articles."""
     return [
         NewsArticle(
             f"Title {i}",
@@ -182,6 +193,35 @@ def fixture_create_news_info() -> list[NewsArticle]:
             f"TCK{i%5}",
         )
         for i in range(15)
+    ]
+
+
+@pytest.fixture(name="create_analyst_recommendations", scope="function")
+def fixture_create_analyst_recommendations() -> list[AnalystRecommendation]:
+    """Create a list of 15 analyst recommendations."""
+    return [AnalystRecommendation(f"TCK{i}", i) for i in range(15)]
+
+
+@pytest.fixture(name="create_insider_trades", scope="function")
+def fixture_create_insider_trades() -> list[InsiderInformation]:
+    """Create a list of 15 insider trades."""
+    now = datetime.now(timezone.utc) - timedelta(days=1)
+    return [
+        InsiderInformation("TCK1", 1000, TradeType.BUY, now),
+        InsiderInformation("TCK1", 1000, TradeType.BUY, now),
+        InsiderInformation("TCK1", 1000, TradeType.BUY, now),
+        InsiderInformation("TCK2", 3000, TradeType.SELL, now),
+        InsiderInformation("TCK2", 3000, TradeType.SELL, now),
+        InsiderInformation("TCK3", 1000, TradeType.BUY, now),
+        InsiderInformation("TCK3", 1000, TradeType.BUY, now),
+        InsiderInformation("TCK4", 1000, TradeType.SELL, now),
+        InsiderInformation("TCK4", 1000, TradeType.SELL, now),
+        InsiderInformation("TCK4", 1000, TradeType.SELL, now),
+        InsiderInformation("TCK5", 500, TradeType.BUY, now),
+        InsiderInformation("TCK5", 500, TradeType.BUY, now),
+        InsiderInformation("TCK6", 500, TradeType.SELL, now),
+        InsiderInformation("TCK6", 500, TradeType.SELL, now),
+        InsiderInformation("TCK7", 0, TradeType.GIFT, now),
     ]
 
 
@@ -236,6 +276,30 @@ def fixture_mock_yahoo_news_provider(monkeypatch, create_news_info):
     return mock_instance
 
 
+@pytest.fixture(name="mock_yahoo_analyst_provider", scope="function")
+def fixture_mock_yahoo_analyst_provider(monkeypatch, create_analyst_recommendations):
+    mock_instance = MagicMock()
+    mock_instance.fetch_analyst_recommendations.return_value = (
+        create_analyst_recommendations
+    )
+    monkeypatch.setattr(
+        "managers.analyst_manager.YahooAnalystProvider",
+        lambda *args, **kwargs: mock_instance,
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_yahoo_insider_provider", scope="function")
+def fixture_mock_yahoo_insider_provider(monkeypatch, create_insider_trades):
+    mock_instance = MagicMock()
+    mock_instance.fetch_insider_trades.return_value = create_insider_trades
+    monkeypatch.setattr(
+        "managers.insider_manager.YahooInsiderProvider",
+        lambda *args, **kwargs: mock_instance,
+    )
+    return mock_instance
+
+
 @pytest.fixture(name="mock_yahoo_price_performance_provider", scope="function")
 def fixture_mock_yahoo_price_performance_provider(
     monkeypatch, create_price_performance_info
@@ -262,7 +326,8 @@ def fixture_mock_earnings_manager(monkeypatch):
     mock_instance.get_latest_upcoming_earnings.return_value = []
 
     monkeypatch.setattr(
-        "jinance.EarningsManager", lambda *args, **kwargs: mock_instance
+        "sections.earnings_section.EarningsManager",
+        lambda *args, **kwargs: mock_instance,
     )
 
     return mock_instance
@@ -273,7 +338,9 @@ def fixture_mock_news_manager(monkeypatch):
     mock_instance = MagicMock()
     mock_instance.get_latest_news.return_value = []
 
-    monkeypatch.setattr("jinance.NewsManager", lambda *args, **kwargs: mock_instance)
+    monkeypatch.setattr(
+        "sections.news_section.NewsManager", lambda *args, **kwargs: mock_instance
+    )
 
     return mock_instance
 
@@ -284,19 +351,40 @@ def fixture_mock_price_performance_manager(monkeypatch):
     mock_instance.get_best_worst_price_performance.return_value = {}
 
     monkeypatch.setattr(
-        "jinance.PricePerformanceManager", lambda *args, **kwargs: mock_instance
+        "sections.price_performance_section.PricePerformanceManager",
+        lambda *args, **kwargs: mock_instance,
     )
 
     return mock_instance
 
 
+@pytest.fixture(name="mock_analyst_manager", scope="function")
+def fixture_mock_analyst_manager(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.get_analyst_recommendations.return_value = {}
+    monkeypatch.setattr(
+        "sections.analyst_section.AnalystManager", lambda *args, **kwargs: mock_instance
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_insider_manager", scope="function")
+def fixture_mock_insider_manager(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.get_insider_trades.return_value = {}
+    monkeypatch.setattr(
+        "sections.insider_section.InsiderManager", lambda *args, **kwargs: mock_instance
+    )
+    return mock_instance
+
+
 # --------------------------------------------------------------------------------------
-# Fixtures for mocking builders, filters, and an AI service.
+# Fixtures for mocking builders.
 # --------------------------------------------------------------------------------------
 
 
-@pytest.fixture(name="mock_report_builder", scope="function")
-def fixture_mock_report_builder(monkeypatch):
+@pytest.fixture(name="mock_report_builder_director", scope="function")
+def fixture_mock_report_builder_director(monkeypatch):
     mock_instance = MagicMock()
     mock_instance.create_pdf_report.return_value = "path/to/report"
 
@@ -313,10 +401,62 @@ def fixture_mock_graph_builder(monkeypatch):
     mock_instance.build_price_graph.return_value = "path/to/graph"
 
     monkeypatch.setattr(
-        "report_building.earnings_buidler.GraphBuilder",
+        "report_building.earnings_builder.GraphBuilder",
         lambda *args, **kwargs: mock_instance,
     )
 
+    return mock_instance
+
+
+@pytest.fixture(name="mock_analyst_builder", scope="function")
+def fixture_mock_analyst_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_markdown.return_value = "Builder md string"
+    monkeypatch.setattr(
+        "sections.analyst_section.AnalystBuilder", lambda *args, **kwargs: mock_instance
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_earnings_builder", scope="function")
+def fixture_mock_earnings_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_markdown.return_value = "Builder md string"
+    monkeypatch.setattr(
+        "sections.earnings_section.EarningsBuilder",
+        lambda *args, **kwargs: mock_instance,
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_insider_builder", scope="function")
+def fixture_mock_insider_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_markdown.return_value = "Builder md string"
+    monkeypatch.setattr(
+        "sections.insider_section.InsiderBuilder", lambda *args, **kwargs: mock_instance
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_news_builder", scope="function")
+def fixture_mock_news_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_markdown.return_value = "Builder md string"
+    monkeypatch.setattr(
+        "sections.news_section.NewsBuilder", lambda *args, **kwargs: mock_instance
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_price_performance_builder", scope="function")
+def fixture_mock_price_performance_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_markdown.return_value = "Builder md string"
+    monkeypatch.setattr(
+        "sections.price_performance_section.PricePerformanceBuilder",
+        lambda *args, **kwargs: mock_instance,
+    )
     return mock_instance
 
 
@@ -340,6 +480,26 @@ def fixture_mock_yahoo_news_filter(monkeypatch, create_news_info):
     monkeypatch.setattr(
         "managers.news_manager.NewsFilter",
         lambda *args, **kwargs: mock_instance,
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_insider_filter", scope="function", autouse=True)
+def fixture_mock_insider_filter(monkeypatch, create_insider_trades):
+    mock_instance = MagicMock()
+    mock_instance.filter_insider_info.return_value = create_insider_trades
+    monkeypatch.setattr(
+        "managers.insider_manager.InsiderInfoFilter",
+        lambda *args, **kwargs: mock_instance,
+    )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_json_decoder", scope="function")
+def fixture_mock_json_decoder(monkeypatch):
+    mock_instance = MagicMock(return_value=[])
+    monkeypatch.setattr(
+        "jinance.JsonDecoder.decode", lambda *args, **kwargs: mock_instance
     )
     return mock_instance
 
@@ -419,6 +579,20 @@ def fixture_sample_news_articles():
             url="https://example.com/nvda1",
             ticker="NVDA",
         ),
+    ]
+
+
+@pytest.fixture(name="sample_insider_trades", scope="function")
+def fixture_sample_insider_trades():
+    now = datetime.now(timezone.utc)
+    return [
+        InsiderInformation("TCK1", 100, TradeType.BUY, now - timedelta(days=1)),
+        InsiderInformation("TCK2", 200, TradeType.SELL, now - timedelta(days=3)),
+        InsiderInformation("TCK3", 300, TradeType.BUY, now - timedelta(days=5)),
+        InsiderInformation("TCK4", 400, TradeType.GIFT, now - timedelta(days=6)),
+        InsiderInformation("TCK5", 500, TradeType.BUY, now - timedelta(days=8)),
+        InsiderInformation("TCK6", 0, TradeType.BUY, now - timedelta(days=3)),
+        InsiderInformation("TCK7", 0, TradeType.SELL, now - timedelta(days=5)),
     ]
 
 

@@ -55,3 +55,19 @@ class TestPricePerformanceManager:
 
         assert result["losers"][0].ticker == "TCK2"
         assert result["losers"][1].ticker == "TCK1"
+
+    def test__get_price_performance_non_existent_provider__return_list_of_winners_and_losers(
+        self, mock_yahoo_price_performance_provider
+    ):
+        """Check if get_worst_best_price_performance with non existent provider defaults it to yahoo and returns correct values when given good data."""
+        pp_manager = PricePerformanceManager(provider="NON_EXISTENT")
+        result = pp_manager.get_best_worst_price_performance(3)
+        assert len(result["winners"]) == 3
+        assert len(result["losers"]) == 3
+        assert result["winners"][0].ticker == "TCK3"
+        assert result["winners"][1].ticker == "TCK11"
+        assert result["winners"][2].ticker == "TCK13"
+
+        assert result["losers"][0].ticker == "TCK9"
+        assert result["losers"][1].ticker == "TCK10"
+        assert result["losers"][2].ticker == "TCK7"

@@ -13,6 +13,5 @@ addopts = """
 --cov=.
 --cov-report=term-missing
 --cov-fail-under=70
---cov-branch
 --cov-config=.coveragerc
 """

@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from models.insider_information import InsiderInformation
 from utils.enums.trade_type import TradeType
@@ -12,7 +12,7 @@ class InsiderInfoFilter:
 
     def __init__(self, days_behind: int):
         logger.debug("InsiderInfoFilter initialized.")
-        self.__cutoff = datetime.now() - timedelta(days=days_behind)
+        self.__cutoff = datetime.now(timezone.utc) - timedelta(days=days_behind)
 
     def filter_insider_info(
         self, raw_insider_info: list[InsiderInformation]
@@ -41,4 +41,8 @@ class InsiderInfoFilter:
     ) -> list[InsiderInformation]:
         """Remove all insider information about gifts (value = 0)."""
         logger.debug("Filtering out gift insider trades.")
-        return [trade for trade in raw_insider_info if trade.type != TradeType.GIFT]
+        return [
+            trade
+            for trade in raw_insider_info
+            if trade.type != TradeType.GIFT and trade.value != 0
+        ]

@@ -47,6 +47,7 @@ class TestNewsFilter:
     def test__filter_news_integration__return_2_news_that_meet_all_criteria(
         self, sample_news_articles, mocker
     ):
+        """Test that checks if all filtering functions work together to filter out all unneeded news."""
         mock_ai = MagicMock()
 
         def fake_filter_news(articles, top_k):

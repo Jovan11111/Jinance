@@ -74,9 +74,9 @@ class SectionData:
     def to_dict(self) -> dict[str, Any]:
         """Get SectionData class object in dict format."""
         return {
-            "type": self.type,
-            "language": self.language,
-            "provider": self.provider,
+            "type": self.type.value,
+            "language": self.language.value,
+            "provider": self.provider.value,
             "tickers": self.tickers,
             "days_ahead": self.days_ahead,
             "days_behind": self.days_behind,

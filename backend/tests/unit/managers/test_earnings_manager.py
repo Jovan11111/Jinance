@@ -60,3 +60,20 @@ class TestEarningsManager:
         result = earnings_manager.get_latest_upcoming_earnings(5)
 
         assert result == []
+
+    def test__get_earnings_non_existent_provider__earnings_with_yahoo_provider(
+        self, mock_yahoo_earnings_provider
+    ):
+        """Check if providing a manager with non existent provider defaults provider to yahoo."""
+        earnings_manager = EarningsManager(provider="NON_EXISTENT")
+        result = earnings_manager.get_latest_upcoming_earnings(5)
+
+        assert len(result) == 5
+        expected_tickers = [
+            e.ticker
+            for e in sorted(
+                mock_yahoo_earnings_provider.fetch_earnings.return_value,
+                key=lambda x: x.date,
+            )[:5]
+        ]
+        assert [r.ticker for r in result] == expected_tickers
