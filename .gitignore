@@ -1,9 +1,0 @@
-__pycache__/
-**/__pycache__/
-venv/
-.coverage
-htmlcov/
-.env
-*.env
-*.pdf
-*.png
