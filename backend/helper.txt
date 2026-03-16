@@ -1,0 +1,2 @@
+linter
+black . && ruff check . --fix
