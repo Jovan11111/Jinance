@@ -33,45 +33,47 @@ class PricePerformanceBuilder(ReportBuilder):
         md = []
         md.append(f"## {self._localization.translate("price_perf_title")}\n")
         md.append(f"{self._localization.translate("price_perf_intro")}\n")
-        md.append(f"### {self._localization.translate("price_perf_best")}\n")
-        for price_perf in price_perf_data["winners"]:
-            graph_path = self.__graph_builder.build_price_graph(
-                price_perf.prices, price_perf.ticker
-            )
+        if price_perf_data["winners"]:
+            md.append(f"### {self._localization.translate("price_perf_best")}\n")
+            for price_perf in price_perf_data["winners"]:
+                graph_path = self.__graph_builder.build_price_graph(
+                    price_perf.prices, price_perf.ticker
+                )
 
-            md.append(
-                f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}$"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}$"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
-            )
-            md.append(f"![Grafik performansi cene]({graph_path})\n")
+                md.append(
+                    f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}$"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}$"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
+                )
+                md.append(f"![Grafik performansi cene]({graph_path})\n")
 
-        md.append(f"### {self._localization.translate("price_perf_worst")}\n")
-        for price_perf in price_perf_data["losers"]:
-            graph_path = self.__graph_builder.build_price_graph(
-                price_perf.prices, price_perf.ticker
-            )
+        if price_perf_data["losers"]:
+            md.append(f"### {self._localization.translate("price_perf_worst")}\n")
+            for price_perf in price_perf_data["losers"]:
+                graph_path = self.__graph_builder.build_price_graph(
+                    price_perf.prices, price_perf.ticker
+                )
 
-            md.append(
-                f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}"
-            )
-            md.append(
-                f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
-            )
-            md.append(f"![Grafik performansi cene]({graph_path})\n")
+                md.append(
+                    f"**{constants.TICKER_TO_COMPANY[price_perf.ticker]} - {price_perf.ticker}**"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_old_price")} {price_perf.prices[0]}"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_cur_price")} {price_perf.prices[-1]}"
+                )
+                md.append(
+                    f"- {self._localization.translate("price_perf_change")} {price_perf.percent_change} %\n"
+                )
+                md.append(f"![Grafik performansi cene]({graph_path})\n")
 
         md.append('<div class="page-break"></div>')
         return "\n".join(md)

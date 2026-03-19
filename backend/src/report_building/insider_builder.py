@@ -33,30 +33,32 @@ class InsiderBuilder(ReportBuilder):
         md.append(f"{self._localization.translate("insider_intro")}\n")
 
         sellers = insider_data["sellers"]
-        md.append(f"### {self._localization.translate('insider_sellers')}\n")
-        md.append(
-            f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_sold")} |"
-        )
-        md.append("|---|--------|-------------|")
-        for i, seller in enumerate(sellers, start=1):
-            ticker = seller.ticker
-            amount = seller.sold
-            amount_str = f"${amount:,.0f}"
-            md.append(f"| {i} | {ticker} | {amount_str} |")
-        md.append("\n")
+        if sellers:
+            md.append(f"### {self._localization.translate('insider_sellers')}\n")
+            md.append(
+                f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_sold")} |"
+            )
+            md.append("|---|--------|-------------|")
+            for i, seller in enumerate(sellers, start=1):
+                ticker = seller.ticker
+                amount = seller.sold
+                amount_str = f"${amount:,.0f}"
+                md.append(f"| {i} | {ticker} | {amount_str} |")
+            md.append("\n")
 
         buyers = insider_data["buyers"]
-        md.append(f"### {self._localization.translate('insider_buyers')}\n")
-        md.append(
-            f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_bought")} |"
-        )
-        md.append("|---|--------|---------------|")
-        for i, buyer in enumerate(buyers, start=1):
-            ticker = buyer.ticker
-            amount = buyer.bought
-            amount_str = f"${amount:,.0f}"
-            md.append(f"| {i} | {ticker} | {amount_str} |")
-        md.append("\n")
+        if buyers:
+            md.append(f"### {self._localization.translate('insider_buyers')}\n")
+            md.append(
+                f"| # | {self._localization.translate("insider_ticker")} | {self._localization.translate("insider_amount_bought")} |"
+            )
+            md.append("|---|--------|---------------|")
+            for i, buyer in enumerate(buyers, start=1):
+                ticker = buyer.ticker
+                amount = buyer.bought
+                amount_str = f"${amount:,.0f}"
+                md.append(f"| {i} | {ticker} | {amount_str} |")
+            md.append("\n")
 
         md.append('<div class="page-break"></div>')
 

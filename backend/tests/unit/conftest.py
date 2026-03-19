@@ -107,7 +107,7 @@ def fixture_create_aggregated_insider_information_dict(
 @pytest.fixture(name="create_analyst_recommendation_dict")
 def fixture_create_analyst_recommendation_dict(
     create_analyst_recommendation: AnalystRecommendation,
-) -> Dict[str, list[AnalystRecommendation]]:
+) -> dict[str, list[AnalystRecommendation]]:
     return {
         "buy": [create_analyst_recommendation],
         "sell": [create_analyst_recommendation],
@@ -395,13 +395,39 @@ def fixture_mock_report_builder_director(monkeypatch):
     return mock_instance
 
 
-@pytest.fixture(name="mock_graph_builder", scope="function")
-def fixture_mock_graph_builder(monkeypatch):
+@pytest.fixture(name="mock_earn_graph_builder", scope="function")
+def fixture_mock_earn_graph_builder(monkeypatch):
     mock_instance = MagicMock()
     mock_instance.build_price_graph.return_value = "path/to/graph"
 
     monkeypatch.setattr(
         "report_building.earnings_builder.GraphBuilder",
+        lambda *args, **kwargs: mock_instance,
+    )
+
+    return mock_instance
+
+
+@pytest.fixture(name="mock_false_earn_graph_builder", scope="function")
+def fixture_mock_false_earn_graph_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_price_graph.return_value = None
+
+    monkeypatch.setattr(
+        "report_building.earnings_builder.GraphBuilder",
+        lambda *args, **kwargs: mock_instance,
+    )
+
+    return mock_instance
+
+
+@pytest.fixture(name="mock_pp_graph_builder", scope="function")
+def fixture_mock_pp_graph_builder(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.build_price_graph.return_value = "path/to/graph"
+
+    monkeypatch.setattr(
+        "report_building.price_performance_builder.GraphBuilder",
         lambda *args, **kwargs: mock_instance,
     )
 

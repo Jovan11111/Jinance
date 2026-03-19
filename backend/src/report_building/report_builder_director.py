@@ -3,7 +3,6 @@ import os
 from datetime import date
 
 import markdown as md_pkg
-from weasyprint import HTML
 
 from models.section_data import SectionData
 from sections.analyst_section import AnalystSection
@@ -15,6 +14,7 @@ from sections.report_section import ReportSection
 from utils.enums.language import Language
 from utils.enums.section_type import SectionType
 from utils.localization import Localization
+from utils.weasyprint_compat import HTML
 
 logger = logging.getLogger(__name__)
 

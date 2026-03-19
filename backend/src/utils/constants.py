@@ -291,6 +291,7 @@ TICKER_TO_COMPANY = {
     "NOC": "northrop grumman",
     "MCK": "mckesson",
     "PSX": "phillips 66",
+    "TCK1": "tck1",
 }
 
 HARD_EVENT_KEYWORDS = [

@@ -34,30 +34,32 @@ class AnalystBuilder(ReportBuilder):
 
         buys = analyst_recommendations["buy"]
         sells = analyst_recommendations["sell"]
-        md.append(f"### {self._localization.translate("analyst_sells")}\n")
-        md.append(
-            f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
-        )
-        md.append("|---|--------|-----------------------|")
-        for i, recommendation in enumerate(sells, start=1):
-            ticker = recommendation.ticker
-            index = recommendation.index
-            index_str = f"{index:.2f}"
-            md.append(f"| {i} | {ticker} | {index_str} |")
-        md.append("\n")
+        if sells:
+            md.append(f"### {self._localization.translate("analyst_sells")}\n")
+            md.append(
+                f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
+            )
+            md.append("|---|--------|-----------------------|")
+            for i, recommendation in enumerate(sells, start=1):
+                ticker = recommendation.ticker
+                index = recommendation.index
+                index_str = f"{index:.2f}"
+                md.append(f"| {i} | {ticker} | {index_str} |")
+            md.append("\n")
 
-        md.append(f"### {self._localization.translate("analyst_buys")}\n")
-        md.append(
-            f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
-        )
-        md.append("|---|--------|-----------------------|")
-        for i, recommendation in enumerate(buys, start=1):
-            ticker = recommendation.ticker
-            index = recommendation.index
-            index_str = f"{index:.2f}"
-            md.append(f"| {i} | {ticker} | {index_str} |")
+        if buys:
+            md.append(f"### {self._localization.translate("analyst_buys")}\n")
+            md.append(
+                f"| # | {self._localization.translate("analyst_ticker")} | {self._localization.translate("analyst_index")}  |"
+            )
+            md.append("|---|--------|-----------------------|")
+            for i, recommendation in enumerate(buys, start=1):
+                ticker = recommendation.ticker
+                index = recommendation.index
+                index_str = f"{index:.2f}"
+                md.append(f"| {i} | {ticker} | {index_str} |")
 
-        md.append("\n")
+            md.append("\n")
 
         md.append('<div class="page-break"></div>')
 
