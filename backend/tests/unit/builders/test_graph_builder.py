@@ -35,3 +35,5 @@ class TestGraphBuilder:
 
         shutil.rmtree("graphs", ignore_errors=True)
         del graph_builder
+
+

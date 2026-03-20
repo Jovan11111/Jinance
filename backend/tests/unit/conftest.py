@@ -14,6 +14,7 @@ from models.news_article import NewsArticle
 from models.previous_earnings_information import PreviousEarningsInformation
 from models.price_performance_information import PricePerformanceInformation
 from models.section_data import SectionData
+from report_building.report_builder_director import ReportBuilderDirector
 from utils.enums.language import Language
 from utils.enums.provider_type import ProviderType
 from utils.enums.section_type import SectionType
@@ -527,6 +528,20 @@ def fixture_mock_json_decoder(monkeypatch):
     monkeypatch.setattr(
         "jinance.JsonDecoder.decode", lambda *args, **kwargs: mock_instance
     )
+    return mock_instance
+
+
+@pytest.fixture(name="mock_earnings_section")
+def fixture_mock_earnings_section(monkeypatch):
+    mock_instance = MagicMock()
+    mock_instance.generate.return_value = ""
+
+    monkeypatch.setitem(
+        ReportBuilderDirector.SECTION_CLASS_MAP,
+        SectionType.EARNINGS,
+        lambda *args, **kwargs: mock_instance
+    )
+
     return mock_instance
 
 
