@@ -539,7 +539,7 @@ def fixture_mock_earnings_section(monkeypatch):
     monkeypatch.setitem(
         ReportBuilderDirector.SECTION_CLASS_MAP,
         SectionType.EARNINGS,
-        lambda *args, **kwargs: mock_instance
+        lambda *args, **kwargs: mock_instance,
     )
 
     return mock_instance
@@ -655,6 +655,16 @@ def fixture_mock_yf_ticker_price_performance(mocker):
 @pytest.fixture(name="mock_yf_ticker_earnings", scope="function")
 def fixture_mock_yf_ticker_earnings(mocker):
     return mocker.patch("providers.yahoo.yahoo_earnings_provider.yf.Ticker")
+
+
+@pytest.fixture(name="mock_yf_ticker_analyst", scope="function")
+def fixture_mock_yf_ticker_analyst(mocker):
+    return mocker.patch("providers.yahoo.yahoo_analyst_provider.yf.Ticker")
+
+
+@pytest.fixture(name="mock_yf_ticker_insider", scope="function")
+def fixture_mock_yf_ticker_insider(mocker):
+    return mocker.patch("providers.yahoo.yahoo_insider_provider.yf.Ticker")
 
 
 @pytest.fixture(name="yf_stock_factory", scope="function")

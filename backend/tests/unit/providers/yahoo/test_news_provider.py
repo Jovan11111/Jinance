@@ -138,7 +138,7 @@ class TestYahooNewsProvider:
         mock_yf_ticker_news.return_value = mock_stock
 
         provider = YahooNewsProvider()
-        result = provider.fetch_news(["TCK1"], days_behind=1)
+        result = provider.fetch_news(["TCK1"], days_behind=2)
         assert result == []
 
     def test__fetch_news_empty_content_fields__empty_article(self, mock_yf_ticker_news):
